@@ -4,19 +4,38 @@ function Stage:new()
 
     self.area = Area(self)
     self.area:addPhysicsWorld()
+    self.timer = Timer()
+    self.area.world:addCollisionClass('Player')
+    self.area.world:addCollisionClass('Projectile', {ignores = {'Projectile','Player'}})
+    self.area.world:addCollisionClass('Collectable', {ignores = {'Collectable', 'Projectile'}})
+   -- self.area.world:addCollisionClass('Projectile', {ignores = {'Player'}})
 
-    self.area:addGameObject('Player', gw/2, gh/2)
-    input:bind('q', function() self.player.dead = true end)
+
+    --self.area:addGameObject('Player', gw/2, gh/2)
+    self.player = self.area:addGameObject('Player', gw/2, gh/2)
+    --input:bind('q', function() self.player.dead = true end)
 
     self.area.world:addCollisionClass('Enemy')
 
     self.main_canvas = love.graphics.newCanvas(gw, gh)
     self.timer = Timer()
 
+    --input:bind('q', function() 
+
+    input:bind('q', function() 
+        self.area:addGameObject('Rock', utils.random(0, gw), utils.random(0, gh)) 
+    end)
+
+    
+
 end
 
 function Stage:update(dt)
     self.area:update(dt)
+
+    --self.area:addGameObject('Rock', utils.random(0, gw), utils.random(0, gh)) 
+
+
 
 end
 

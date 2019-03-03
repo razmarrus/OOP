@@ -1,9 +1,10 @@
 ------------------------------------------------------------------------------
 -- LIBRARIES
 --dbg         = require 'libraries/mobdebug/mobdebug'
+Timer       = require 'libraries/hump/timer'
 Input       = require 'libraries/input/Input'
 Object      = require 'libraries/classic/classic'
-Timer       = require 'libraries/hump/timer'
+
 Camera      = require 'libraries/hump/camera'
 Vector      = require 'libraries/hump/vector'
 Physics     = require 'libraries/windfield'

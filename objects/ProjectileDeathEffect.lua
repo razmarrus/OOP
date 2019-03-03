@@ -36,3 +36,4 @@ end
 function ProjectileDeathEffect:destroy()
     ProjectileDeathEffect.super.destroy(self)
 end
+

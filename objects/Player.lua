@@ -18,9 +18,16 @@ function Player:new(area, x, y, opts)
     self.v = 2
     self.max_v = 100
     self.a = 100
-
     
+    self.max_hp = 100
+    self.hp = self.max_hp
 
+    self.max_ammo = 100
+    self.ammo = self.max_ammo
+
+    self.collider:setCollisionClass('Player')
+
+    self.timer:every(5, function() self:tick() end)
     
     input:bind('w', function() self:die() end)
    
@@ -28,6 +35,9 @@ function Player:new(area, x, y, opts)
         self:shoot()
     end)
 
+    self.timer:every(0.8, function()
+        self.area:addGameObject('Rock', utils.random(0, gw), utils.random(0, gh))
+    end)
 
     -- The Ship
 
@@ -55,13 +65,27 @@ function Player:update(dt)
     if self.v >= self.max_v then
         self.v = self.max_v
     end
-
     
     if self.x < 0 then self:die() end
     if self.y < 0 then self:die() end
     if self.x > gw then self:die() end
     if self.y > gh then self:die() end
 
+    if self.parent then self.x, self.y = self.parent.x, self.parent.y end
+
+    if self.collider:enter('Collectable') then
+        print(1)
+    end
+
+    if self.collider:enter('Enemy') then
+        local collision_data = self.collider:getEnterCollisionData('Enemy')
+        local object = collision_data.collider:getObject()
+        --self:addHP(-damage)
+        --object:hit(self.damage)
+        self:hit(30)
+
+        --self:die()
+    end
 
 end
 
@@ -96,4 +120,54 @@ function Player:die()
     for i = 1, love.math.random(8, 12) do 
     	self.area:addGameObject('ExplodeParticle', self.x, self.y) 
   	end
+end
+
+function Player:tick()
+    self.area:addGameObject('TickEffect', self.x, self.y, {parent = self})
+end
+
+
+function Player:hit(damage)
+    local damage = damage or 40
+
+    self.hp = self.hp - damage
+
+    if self.invincible then return end
+    if self.hp > 0 then
+        print("P: hit " .. damage)
+        print("current hp " .. self.hp)
+    else
+        print("P: hit " .. damage)
+        print("current hp " .. 0)
+    end
+    
+    if self.hp <= 0 then
+        self:die()
+        --self.area.room:addScore(self.value)
+    else
+        self.hit_flash = true
+        self.timer:after(0.2, function() self.hit_flash = false end)
+    end
+
+    self:addHP(-damage)
+
+    if damage >= 30 then
+        self.invincible = true
+        print("P: +invincible")
+        self.timer:every(0.2, function() self.visible = not self.visible end, 9)
+        self.timer:after(2, function()
+            self.invincible = false
+            self.visible = true
+            print("P: -invincible")
+        end)
+        flash(3)
+    else
+        flash(2)
+    end
+end
+
+function Player:addHP(amount)
+    self.hp_stat:add(amount, function()
+        self:die()
+    end)
 end

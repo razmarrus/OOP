@@ -8,6 +8,7 @@ function Projectile:new(area, x, y, opts)
 
     self.collider = self.area.world:newCircleCollider(self.x, self.y, self.s)
     self.collider:setObject(self)
+    self.collider:setCollisionClass('Projectile')
     self.collider:setLinearVelocity(self.v*math.cos(self.r), self.v*math.sin(self.r))
 end
 
@@ -21,6 +22,14 @@ function Projectile:update(dt)
     if self.y < 0 then self:die() end
     if self.x > gw then self:die() end
     if self.y > gh then self:die() end
+
+    if self.collider:enter('Enemy') then
+        local collision_data = self.collider:getEnterCollisionData('Enemy')
+        local object = collision_data.collider:getObject()
+
+        object:hit(self.damage)
+        self:die()
+    end
 
 end
 
@@ -38,7 +47,7 @@ function Projectile:draw()
     love.graphics.setLineWidth(1)
     love.graphics.pop()
     ]]--
-    
+
 end
 
 function Projectile:destroy()
