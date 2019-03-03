@@ -1,57 +1,4 @@
 Player = GameObject:extend()
---[[
-function Player:new(area, x, y, opts)
-    Player.super.new(self, area, x, y, opts)
-
-    
-    self.r = -math.pi/2
-    self.rv = 1.66*math.pi  --velocorty of rounding
-    self.v = 2
-    self.max_v = 100
-    self.a = 100
-
-    self.x, self.y = x, y
-    self.w, self.h = 12, 12
-    --self.area = area  --!!!!!!
-    self.collider = self.area.world:newCircleCollider(self.x, self.y, self.w)
-    self.collider:setObject(self)  --binding
-
-
-end
-
-function Player:update(dt)
-    Player.super.update(self, dt)
-
-    if input:down('left') then self.r = self.r - self.rv*dt end
-    if input:down('right') then self.r = self.r + self.rv*dt end
-
-    self.v = math.min(self.v + self.a*dt, self.max_v)
-    self.collider:setLinearVelocity(self.v*math.cos(self.r), self.v*math.sin(self.r))
-    
-    self.v = self.v + self.a*dt
-    if self.v >= self.max_v then
-        self.v = self.max_v
-    end
-
-end
-
-function Player:draw()
-    --love.graphics.circle('line', self.x, self.y, self.w)
-    love.graphics.circle('line', self.x, self.y, self.w)
-    love.graphics.line(self.x, self.y, self.x + 2*self.w*math.cos(self.r), self.y + 2*self.w*math.sin(self.r))
-
-end
-]]--
-
---
--- Created by IntelliJ IDEA.
--- User: seletz
--- Date: 21.02.18
--- Time: 19:13
--- To change this template use File | Settings | File Templates.
---
-
-Player = GameObject:extend()
 
 local SHOOT_RATE = 0.25
 local BOOST_RATE = 2
@@ -71,13 +18,20 @@ function Player:new(area, x, y, opts)
     self.v = 2
     self.max_v = 100
     self.a = 100
+
+    
+
+    
+    input:bind('w', function() self:die() end)
    
+    self.timer:every(0.24, function()
+        self:shoot()
+    end)
+
 
     -- The Ship
 
 end
-
-
 
 
 
@@ -102,6 +56,11 @@ function Player:update(dt)
         self.v = self.max_v
     end
 
+    
+    if self.x < 0 then self:die() end
+    if self.y < 0 then self:die() end
+    if self.x > gw then self:die() end
+    if self.y > gh then self:die() end
 
 
 end
@@ -114,4 +73,27 @@ function Player:draw()
  
 end
 
+function Player:destroy()
+    Player.super.destroy(self)
+end
 
+
+function Player:shoot()
+    local d = 1.2*self.w
+
+    self.area:addGameObject('ShootEffect', self.x + d*math.cos(self.r), 
+    self.y + d*math.sin(self.r), {player = self, d = d})
+
+    self.area:addGameObject('Projectile', self.x + 1.5*d*math.cos(self.r), 
+    self.y + 1.5*d*math.sin(self.r), {r = self.r})
+end
+
+function Player:die()
+    self.dead = true 
+    flash(4)
+
+    --camera:shake(6, 60, 0.4)
+    for i = 1, love.math.random(8, 12) do 
+    	self.area:addGameObject('ExplodeParticle', self.x, self.y) 
+  	end
+end

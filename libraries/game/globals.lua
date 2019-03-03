@@ -6,6 +6,14 @@
 -- To change this template use File | Settings | File Templates.
 --
 
+
+default_color = {222, 222, 222}
+background_color = {16, 16, 16}
+ammo_color = {123, 200, 164}
+boost_color = {76, 195, 217}
+hp_color = {241, 103, 69}
+skill_point_color = {255, 198, 93}
+
 camera = Camera()
 draft = Draft()
 timer = Timer()
@@ -111,4 +119,20 @@ function untilCounterZero(name, f, ...)
         end
     end
 end
+
+function pushRotate(x, y, r)
+    love.graphics.push()
+    love.graphics.translate(x, y)
+    love.graphics.rotate(r or 0)
+    love.graphics.translate(-x, -y)
+end
+
+function pushRotateScale(x, y, r, sx, sy)
+    love.graphics.push()
+    love.graphics.translate(x, y)
+    love.graphics.rotate(r or 0)
+    love.graphics.scale(sx or 1, sy or sx or 1)
+    love.graphics.translate(-x, -y)
+end
+
 

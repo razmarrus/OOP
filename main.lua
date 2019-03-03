@@ -38,8 +38,8 @@ function love.load()
     input:bind("right", "right")
     input:bind("up", "up")
     input:bind("down", "down")
---[[
-    input:bind("f1", function()
+
+    input:bind("f7", function()
         print("------------------------------------------------------------")
         print("Before collection: " .. collectgarbage("count")/1024)
         collectgarbage()
@@ -49,7 +49,7 @@ function love.load()
         for k, v in pairs(counts) do print(k, v) end
         print("------------------------------------------------------------")
     end)
-]]--
+
     love.graphics.setDefaultFilter("nearest")
     love.graphics.setLineStyle("rough")
     resize(2)
@@ -77,6 +77,16 @@ function love.draw()
 
     if current_room then
         current_room:draw()
+    end
+
+    if flash_frames then 
+        flash_frames = flash_frames - 1
+        if flash_frames == -1 then flash_frames = nil end
+    end
+    if flash_frames then
+        love.graphics.setColor(background_color)
+        love.graphics.rectangle('fill', 0, 0, sx*gw, sy*gh)
+        love.graphics.setColor(255, 255, 255)
     end
 --[[
     untilCounterZero("flash_frames", function()

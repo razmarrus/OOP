@@ -8,6 +8,8 @@ function Stage:new()
     self.area:addGameObject('Player', gw/2, gh/2)
     input:bind('q', function() self.player.dead = true end)
 
+    self.area.world:addCollisionClass('Enemy')
+
     self.main_canvas = love.graphics.newCanvas(gw, gh)
     self.timer = Timer()
 
@@ -16,6 +18,11 @@ end
 function Stage:update(dt)
     self.area:update(dt)
 
+end
+
+function Stage:destroy()
+    self.area:destroy()
+    self.area = nil
 end
 
 function Stage:draw()

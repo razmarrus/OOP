@@ -31,6 +31,7 @@ end
 
 function GameObject:destroy()
     -- if self.timer then self.timer:destroy() end
+    --self.timer:destroy()
     if self.collider then self.collider:destroy() end
     self.collider = nil
 end
