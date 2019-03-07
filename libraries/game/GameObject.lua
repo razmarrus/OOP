@@ -1,10 +1,4 @@
---
--- Created by IntelliJ IDEA.
--- User: seletz
--- Date: 20.02.18
--- Time: 21:58
--- To change this template use File | Settings | File Templates.
---
+
 
 local GameObject = Object:extend()
 
@@ -15,6 +9,7 @@ function GameObject:new(area, x, y, opts)
             self[k] = v
         end
     end
+    self.depth = 50
 
     self.area = area
     self.x = x or utils.random(0, gw)

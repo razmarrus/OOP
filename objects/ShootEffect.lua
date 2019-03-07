@@ -5,6 +5,7 @@ function ShootEffect:new(area, x, y, opts)
 
     self.x, self.y = x, y
     self.w = 8
+    self.depth = 50
     self.timer:tween(0.1, self, {w = 0}, 'in-out-cubic', function() self.dead = true end)
 end
 

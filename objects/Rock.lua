@@ -18,7 +18,7 @@ function Rock:new(area, x, y, opts)
 
     self.color = opts.color or colors.hp_color
     self.points = utils.createIrregularPolyPoints(self.s/2, 8)
-
+    barrel = love.graphics.newImage("images/Barrel.png")
     self.collider = self.area.world:newPolygonCollider(self.points)
     self.collider:setPosition(self.x, self.y)
     self.collider:setObject(self)
@@ -68,14 +68,20 @@ function Rock:update(dt)
 end
 
 function Rock:draw()
+
+    bar = {self.x,self.y}
+    love.graphics.draw(barrel, bar[1] - barrel:getWidth()/2, bar[2] - barrel:getHeight()/2)
+            drawn = true
+
     if self.hit_flash then
         love.graphics.setColor(colors.default_color)
-    else
-        love.graphics.setColor(self.color)
+   -- else
+    --    love.graphics.setColor(self.color)
     end
-    local points = {self.collider:getWorldPoints(self.collider.shapes.main:getPoints())}
-    love.graphics.polygon('line', points)
-    love.graphics.setColor(colors.default_color)
+    --local points = {self.collider:getWorldPoints(self.collider.shapes.main:getPoints())}
+    
+    --love.graphics.polygon('line', points)
+    --love.graphics.setColor(colors.default_color)
 end
 
 

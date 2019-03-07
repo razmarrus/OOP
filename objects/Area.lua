@@ -3,10 +3,9 @@ Area = Object:extend()
 function Area:new(room)
     self.room = room
     self.game_objects = {}
-
+    self.depth = 65
     self.draw_world = false
     
-
 end
 
 function Area:update(dt)

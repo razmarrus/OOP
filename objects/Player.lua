@@ -7,7 +7,7 @@ local SHIP_SIZE = 12
 
 function Player:new(area, x, y, opts)
     Player.super.new(self, area, x, y, opts)
-
+    person = love.graphics.newImage("images/Wizzard_pix.png")
     self.x, self.y = x, y
     self.w, self.h = SHIP_SIZE, SHIP_SIZE
     self.collider = self.area.world:newCircleCollider(self.x, self.y, self.w)
@@ -18,7 +18,7 @@ function Player:new(area, x, y, opts)
     self.v = 2
     self.max_v = 100
     self.a = 100
-    
+    self.depth = 75
     self.max_hp = 100
     self.hp = self.max_hp
 
@@ -91,7 +91,10 @@ end
 
 
 function Player:draw()
-    love.graphics.circle('line', self.x, self.y, self.w)
+    character = {self.x,self.y}
+    love.graphics.draw(person, character[1] - person:getWidth()/2, character[2] - person:getHeight()/2)
+            drawn = true
+    --love.graphics.circle('line', self.x, self.y, self.w)
     love.graphics.line(self.x, self.y, self.x + 2*self.w*math.cos(self.r), self.y + 2*self.w*math.sin(self.r))
 
  
