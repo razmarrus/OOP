@@ -35,7 +35,7 @@ Input.all_keys = {
     "currencysubunit", "lctrl", "lshift", "lalt", "lgui", "rctrl", "rshift", "ralt", "rgui", "mode", "audionext", "audioprev", "audiostop", "audioplay", "audiomute",
     "mediaselect", "brightnessdown", "brightnessup", "displayswitch", "kbdillumtoggle", "kbdillumdown", "kbdillumup", "eject", "sleep", "mouse1", "mouse2", "mouse3",
     "mouse4", "mouse5", "wheelup", "wheeldown", "fdown", "fup", "fleft", "fright", "back", "guide", "start", "leftstick", "rightstick", "l1", "r1", "l2", "r2", "dpup",
-    "dpdown", "dpleft", "dpright", "leftx", "lefty", "rightx", "righty",
+    "dpdown", "dpleft", "dpright", "leftx", "lefty", "rightx", "righty", "left_click", "zoom_in", "zoom_out",
 }
 
 function Input.new()

@@ -2,10 +2,10 @@ Projectile = GameObject:extend()
 
 function Projectile:new(area, x, y, opts)
     Projectile.super.new(self, area, x, y, opts)
-
+    self.damage = 100
     self.s = opts.s or 2.5
     self.v = opts.v or 200
-
+    proj = love.graphics.newImage("images/snowball.png")
     self.collider = self.area.world:newCircleCollider(self.x, self.y, self.s)
     self.collider:setObject(self)
     self.collider:setCollisionClass('Projectile')
@@ -35,18 +35,10 @@ end
 
 function Projectile:draw()
     love.graphics.setColor(default_color)
-    love.graphics.circle('line', self.x, self.y, self.s)
---[[
-    utils.pushRotate(self.x, self.y, self.r)
-    
-    love.graphics.setLineWidth(self.s - self.s/4)
-    love.graphics.setColor(self.color)
-    love.graphics.line(self.x - 2*self.s, self.y, self.x, self.y)
-    love.graphics.setColor(colors.hp_color) -- change half the projectile line to another color
-    love.graphics.line(self.x, self.y, self.x + 2*self.s, self.y)
-    love.graphics.setLineWidth(1)
-    love.graphics.pop()
-    ]]--
+    local pr_image = {self.x,self.y}
+    --love.graphics.circle('line', self.x, self.y, self.s)
+    love.graphics.draw(proj, pr_image[1] - proj:getWidth()/2, pr_image[2] - proj:getHeight()/2)
+    drawn = true
 
 end
 

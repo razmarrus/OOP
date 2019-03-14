@@ -21,9 +21,9 @@ function Player:new(area, x, y, opts)
     self.depth = 75
     self.max_hp = 100
     self.hp = self.max_hp
-
-    self.max_ammo = 100
-    self.ammo = self.max_ammo
+    --self.hp_stat        = Stats("hp", 100)
+    self.max_mana = 150
+    self.mana = 50
 
     self.collider:setCollisionClass('Player')
 
@@ -35,11 +35,13 @@ function Player:new(area, x, y, opts)
         self:shoot()
     end)
 
-    self.timer:every(0.8, function()
+    self.timer:every(2, function()
         self.area:addGameObject('Rock', utils.random(0, gw), utils.random(0, gh))
     end)
 
-    -- The Ship
+    self.timer:every(3, function()
+        self.area:addGameObject('Shooter', utils.random(0, gw), utils.random(0, gh))
+    end)
 
 end
 
@@ -83,8 +85,19 @@ function Player:update(dt)
         --self:addHP(-damage)
         --object:hit(self.damage)
         self:hit(30)
-
         --self:die()
+    end
+
+    if self.collider:enter('Collectable') then
+        local collision_data = self.collider:getEnterCollisionData('Collectable')
+        local object = collision_data.collider:getObject()
+        if object:is(Mana) then
+            object:die()
+            if self.mana < self.max_mana then
+                self.mana = self.mana + 15
+                print("Mana "..self.mana)
+            end
+        end
     end
 
 end
@@ -95,9 +108,8 @@ function Player:draw()
     love.graphics.draw(person, character[1] - person:getWidth()/2, character[2] - person:getHeight()/2)
             drawn = true
     --love.graphics.circle('line', self.x, self.y, self.w)
-    love.graphics.line(self.x, self.y, self.x + 2*self.w*math.cos(self.r), self.y + 2*self.w*math.sin(self.r))
+    --love.graphics.line(self.x, self.y, self.x + 2*self.w*math.cos(self.r), self.y + 2*self.w*math.sin(self.r))
 
- 
 end
 
 function Player:destroy()
@@ -115,6 +127,7 @@ function Player:shoot()
     self.y + 1.5*d*math.sin(self.r), {r = self.r})
 end
 
+
 function Player:die()
     self.dead = true 
     flash(4)
@@ -122,7 +135,9 @@ function Player:die()
     --camera:shake(6, 60, 0.4)
     for i = 1, love.math.random(8, 12) do 
     	self.area:addGameObject('ExplodeParticle', self.x, self.y) 
-  	end
+    end
+    --state.current_room = Stage()
+    state.current_room:finish()
 end
 
 function Player:tick()
@@ -145,6 +160,7 @@ function Player:hit(damage)
     end
     
     if self.hp <= 0 then
+        self.hp = 0
         self:die()
         --self.area.room:addScore(self.value)
     else
@@ -152,7 +168,7 @@ function Player:hit(damage)
         self.timer:after(0.2, function() self.hit_flash = false end)
     end
 
-    self:addHP(-damage)
+    --self:addHP(-damage)
 
     if damage >= 30 then
         self.invincible = true
@@ -170,7 +186,13 @@ function Player:hit(damage)
 end
 
 function Player:addHP(amount)
-    self.hp_stat:add(amount, function()
+    self.hp:add(amount, function()
+        self:die()
+    end)
+end
+
+function Player:addMana(amount)
+    self.mana:add(amount, function()
         self:die()
     end)
 end

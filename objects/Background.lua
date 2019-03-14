@@ -18,8 +18,9 @@ function Background:update(dt)
 end
 
 function Background:draw()
-    back = {self.x, self.y}
-    love.graphics.draw(scene, back[1] - scene:getWidth()/2,
-    back[2] - scene:getHeight()/2) 
-        drawn = true
+    --love.graphics.setColor({0,0,255})
+    
+    love.graphics.draw(scene, gw/2 - scene:getWidth()/2,
+    gh/2 - scene:getHeight()/2) 
+       drawn = true
 end

@@ -1,11 +1,3 @@
---
--- Created by IntelliJ IDEA.
--- User: seletz
--- Date: 21.02.18
--- Time: 19:13
--- To change this template use File | Settings | File Templates.
---
-
 Rock = GameObject:extend()
 
 function Rock:new(area, x, y, opts)
@@ -27,7 +19,7 @@ function Rock:new(area, x, y, opts)
     self.v = -direction*utils.random(20, 40)
     self.collider:setLinearVelocity(self.v, 0)
     self.collider:applyAngularImpulse(utils.random(-100, 100))
-
+    self.depth = 65
     -- effects
 
     self.hit_flash = false
@@ -47,6 +39,10 @@ function Rock:die()
     for i = 1, love.math.random(4, 8) do
         self.area:addGameObject('ExplodeParticle', self.x, self.y, {s = 3, color = self.color})
     end
+    if love.math.random(1, 3) >= 3 then 
+        self.area:addGameObject('Mana', self.x, self.y, 
+        {color = self.color})
+    end
 end
 
 function Rock:hit(damage)
@@ -58,8 +54,8 @@ function Rock:hit(damage)
         self:die()
         --self.area.room:addScore(self.value)
     else
-        self.hit_flash = true
-        self.timer:after(0.2, function() self.hit_flash = false end)
+        --self.hit_flash = true
+        --self.timer:after(0.2, function() self.hit_flash = false end)
     end
 end
 
@@ -75,13 +71,7 @@ function Rock:draw()
 
     if self.hit_flash then
         love.graphics.setColor(colors.default_color)
-   -- else
-    --    love.graphics.setColor(self.color)
     end
-    --local points = {self.collider:getWorldPoints(self.collider.shapes.main:getPoints())}
-    
-    --love.graphics.polygon('line', points)
-    --love.graphics.setColor(colors.default_color)
 end
 
 

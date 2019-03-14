@@ -37,8 +37,8 @@ function love.load()
 
     input:bind("left", "left")
     input:bind("right", "right")
-    input:bind("up", "up")
-    input:bind("down", "down")
+   -- input:bind("up", "up")
+   -- input:bind("down", "down")
 
     input:bind("f7", function()
         print("------------------------------------------------------------")
@@ -55,6 +55,8 @@ function love.load()
     love.graphics.setLineStyle("rough")
     resize(2)
     gotoRoom("Stage")
+    --gotoRoom("SkillTree")
+    --gotoRoom("Menu")
 end
 
 function love.update(dt)
@@ -79,7 +81,7 @@ function love.draw()
     if current_room then
         current_room:draw()
     end
-
+--[[
     if flash_frames then 
         flash_frames = flash_frames - 1
         if flash_frames == -1 then flash_frames = nil end
