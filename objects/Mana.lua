@@ -40,7 +40,7 @@ end
 
 function Mana:draw()
     Ma = {self.x,self.y}
-    love.graphics.draw(m_portion, Ma[1] - person:getWidth()/2, Ma[2] - m_portion:getHeight()/2)
+    love.graphics.draw(m_portion, Ma[1] - person:getWidth()/2 + 10, Ma[2] - m_portion:getHeight()/2)
             drawn = true
 end
 

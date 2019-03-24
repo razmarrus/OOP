@@ -28,6 +28,7 @@ function Area:update(dt)
 end
 
 
+
 function Area:draw()
     if self.world then self.world:draw() end
 

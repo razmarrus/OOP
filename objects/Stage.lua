@@ -2,6 +2,7 @@ Stage = Object:extend()
 
 function Stage:new()
     --self.depth = 30
+    undieble = false
     self.area = Area(self)
     self.area:addPhysicsWorld()
     self.timer = Timer()
@@ -13,8 +14,8 @@ function Stage:new()
     self.font = GAME_FONT
     self.back = self.area:addGameObject('Background', gw/2, gh/2)
     self.player = self.area:addGameObject('Player', gw/2, gh/2)
-    --sound = love.audio.newSource("music/SOAD_Chop_Suey_8_bit.mp3")
-    --sound:play()
+    sound = love.audio.newSource("music/SOAD_Chop_Suey_8_bit.mp3")
+    sound:play()
 
     self.main_canvas = love.graphics.newCanvas(gw, gh)
 
@@ -26,6 +27,8 @@ function Stage:new()
         --Debug
         if key == "w" then --set to whatever key you want to use
            debug.debug()
+        elseif key == "escape" then 
+            gotoRoom("Menu")
         end
      end
 
@@ -39,6 +42,7 @@ end
 function Stage:destroy()
     self.area:destroy()
     self.area = nil
+    sound:stop()
 end
 
 function Stage:draw()
@@ -46,8 +50,7 @@ function Stage:draw()
     love.graphics.clear()
         --love.graphics.circle('line', gw/2, gh/2, 50)
         self.area:draw()
-
-
+    
     love.graphics.setFont(self.font)
 
     local r, g, b = unpack(colors.hp_color)
@@ -58,7 +61,7 @@ function Stage:draw()
     love.graphics.rectangle('fill', gw/2 - 52, gh - 16, 48*(hp/max_hp), 4)
     love.graphics.setColor(r - 32, g - 32, b - 32)
     love.graphics.rectangle('line', gw/2 - 52, gh - 16, 48, 4)
-    
+
     love.graphics.setCanvas()
     love.graphics.print('HP', gw-120 , gh+240, 0, 1, 1,
     math.floor(self.font:getWidth('HP')/2), math.floor(self.font:getHeight()/2))
@@ -91,6 +94,7 @@ function Stage:draw()
 end
 
 function Stage:finish()
+
     timer:after(1, function()
         gotoRoom('Stage')
     end)

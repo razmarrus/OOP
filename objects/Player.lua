@@ -12,7 +12,8 @@ function Player:new(area, x, y, opts)
     self.w, self.h = SHIP_SIZE, SHIP_SIZE
     self.collider = self.area.world:newCircleCollider(self.x, self.y, self.w)
     self.collider:setObject(self)
-
+    HP = 80
+    MANA = 50
     self.r = -math.pi/2
     self.rv = 1.66*math.pi  --velocorty of rounding
     self.v = 2
@@ -20,7 +21,8 @@ function Player:new(area, x, y, opts)
     self.a = 100
     self.depth = 75
     self.max_hp = 100
-    self.hp = self.max_hp
+    self.hp = 80
+    --self.hp = self.max_hp
     --self.hp_stat        = Stats("hp", 100)
     self.max_mana = 150
     self.mana = 50
@@ -29,7 +31,9 @@ function Player:new(area, x, y, opts)
 
     self.timer:every(5, function() self:tick() end)
     
-    input:bind('w', function() self:die() end)
+    --input:bind('w', function() self:die() end)
+    --input:bind('a', function()   goto_room_Menu() end)
+
    
     self.timer:every(0.24, function()
         self:shoot()
@@ -45,6 +49,11 @@ function Player:new(area, x, y, opts)
 
 end
 
+function GM()
+    print("GOD MOD")
+    HP = 100
+    undieble = true
+end
 
 
 function Player:update(dt)
@@ -67,7 +76,7 @@ function Player:update(dt)
     if self.v >= self.max_v then
         self.v = self.max_v
     end
-    
+    self.hp = HP
     if self.x < 0 then self:die() end
     if self.y < 0 then self:die() end
     if self.x > gw then self:die() end
@@ -107,6 +116,9 @@ function Player:draw()
     character = {self.x,self.y}
     love.graphics.draw(person, character[1] - person:getWidth()/2, character[2] - person:getHeight()/2)
             drawn = true
+    if undieble then
+        love.graphics.circle('line', self.x, self.y, 22)
+    end
     --love.graphics.circle('line', self.x, self.y, self.w)
     --love.graphics.line(self.x, self.y, self.x + 2*self.w*math.cos(self.r), self.y + 2*self.w*math.sin(self.r))
 
@@ -147,8 +159,10 @@ end
 
 function Player:hit(damage)
     local damage = damage or 40
-
-    self.hp = self.hp - damage
+    if not undieble then
+        self.hp = self.hp - damage
+    end
+    HP = self.hp
 
     if self.invincible then return end
     if self.hp > 0 then

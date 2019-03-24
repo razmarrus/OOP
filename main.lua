@@ -11,6 +11,8 @@ Physics     = require 'libraries/windfield'
 Draft       = require 'libraries/draft/draft'
 fn          = require 'libraries/moses/moses'
 lume        = require 'libraries/lume/lume'
+Button      = require 'libraries/button/Button'
+Event      = require 'libraries/button/Events'
 require 'libraries/utf8/utf8'
 require 'libraries/lovedebug/lovedebug'
 
@@ -50,14 +52,16 @@ function love.load()
         for k, v in pairs(counts) do print(k, v) end
         print("------------------------------------------------------------")
     end)
+    _G.events = Event(false)
 
     love.graphics.setDefaultFilter("nearest")
     love.graphics.setLineStyle("rough")
     resize(2)
-    gotoRoom("Stage")
+    --gotoRoom("Stage")
     --gotoRoom("SkillTree")
-    --gotoRoom("Menu")
+    gotoRoom("Menu")
 end
+
 
 function love.update(dt)
     -- require("libraries/lovebird/lovebird").update()

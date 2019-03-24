@@ -17,8 +17,9 @@ function Shooter:new(area, x, y, opts)
     self.y = utils.random(self.h, gh - self.h)
 
     self.color = opts.color or colors.hp_color
-    self.collider = self.area.world:newPolygonCollider(
-        {self.w, 0, -self.w/2, self.h, -self.w, 0, -self.w/2, -self.h})
+    self.collider = self.area.world:newCircleCollider(self.x, self.y, self.w)
+    --self.area.world:newPolygonCollider(
+    --    {self.w, 0, -self.w/2, self.h, -self.w, 0, -self.w/2, -self.h})
     self.collider:setPosition(self.x, self.y)
     self.collider:setObject(self)
     self.collider:setCollisionClass('Enemy')

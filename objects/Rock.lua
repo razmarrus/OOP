@@ -39,7 +39,7 @@ function Rock:die()
     for i = 1, love.math.random(4, 8) do
         self.area:addGameObject('ExplodeParticle', self.x, self.y, {s = 3, color = self.color})
     end
-    if love.math.random(1, 3) >= 3 then 
+    if love.math.random(1, 3) >= 1 then 
         self.area:addGameObject('Mana', self.x, self.y, 
         {color = self.color})
     end
