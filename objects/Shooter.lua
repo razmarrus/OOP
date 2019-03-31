@@ -16,7 +16,7 @@ function Shooter:new(area, x, y, opts)
     self.x = gw/2 + direction*(gw/2 + 48)
     self.y = utils.random(self.h, gh - self.h)
 
-    self.color = opts.color or colors.hp_color
+   self.color = opts.color or colors.hp_color
     self.collider = self.area.world:newCircleCollider(self.x, self.y, self.w)
     --self.area.world:newPolygonCollider(
     --    {self.w, 0, -self.w/2, self.h, -self.w, 0, -self.w/2, -self.h})
@@ -73,7 +73,7 @@ function Shooter:hit(damage)
 
     if self.hp <= 0 then
         self:die()
-        --self.area.room:addScore(self.value)
+        self.area.room:addScore(self.value)
     else
         self.hit_flash = true
         self.timer:after(0.2, function() self.hit_flash = false end)
@@ -88,7 +88,7 @@ function Shooter:draw()
     if self.hit_flash then
         love.graphics.setColor(colors.default_color)
     else
-        love.graphics.setColor(self.color)
+       love.graphics.setColor(self.color)
     end
     if self.shootflag then
         shooter_image = love.graphics.newImage("images/creep_attack.png")

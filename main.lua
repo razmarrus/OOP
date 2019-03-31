@@ -12,7 +12,8 @@ Draft       = require 'libraries/draft/draft'
 fn          = require 'libraries/moses/moses'
 lume        = require 'libraries/lume/lume'
 Button      = require 'libraries/button/Button'
-Event      = require 'libraries/button/Events'
+Event       = require 'libraries/button/Events'
+bitser      = require 'libraries/bitser/bitser'
 require 'libraries/utf8/utf8'
 require 'libraries/lovedebug/lovedebug'
 
@@ -25,6 +26,8 @@ gameui          = require 'libraries/game/UI'
 utils           = require 'libraries/game/utils'
 colors          = require 'libraries/game/colors'
 
+--gameui          = require 'libraries/game/UI'
+
 ------------------------------------------------------------------------------
 -- GLOBALS
 require 'libraries/game/globals'
@@ -36,7 +39,7 @@ function love.load()
 
     -- this only works if initialized here . :??
     input = Input()
-
+    load()
     input:bind("left", "left")
     input:bind("right", "right")
    -- input:bind("up", "up")

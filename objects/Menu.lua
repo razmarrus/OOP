@@ -11,9 +11,9 @@ function Menu:new()
     self.main_canvas = love.graphics.newCanvas(gw, gh)
     sound = love.audio.newSource("music/JoJoStand_Proud.mp3")
     sound:play()
-
+    --HERO = 'Mage'
+    --DIFFICULTY = 1
     log_screen_image = love.graphics.newImage("images/dio_background.png")
-    --buttons = {}
     button_play = Button(gw , gh -120, 200, 35, "Play")
     button_SkillTree = Button(gw , gh -60, 200, 35, "Skill Tree")
     button_Exit = Button(gw , gh, 200, 35, "Exit")
@@ -60,7 +60,4 @@ end
 function Menu:destroy()
     _G.events:unhook("onBtnClick", on_click_play)
     sound:stop()
-    --_G.events_skillTree:unhook("onBtnClick", on_click_skilltree)
-    --self.area:destroy()
-    --self.area = nil
 end

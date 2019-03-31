@@ -39,7 +39,7 @@ function Rock:die()
     for i = 1, love.math.random(4, 8) do
         self.area:addGameObject('ExplodeParticle', self.x, self.y, {s = 3, color = self.color})
     end
-    if love.math.random(1, 3) >= 1 then 
+    if love.math.random(1, 3) >= 3 then 
         self.area:addGameObject('Mana', self.x, self.y, 
         {color = self.color})
     end
@@ -52,7 +52,7 @@ function Rock:hit(damage)
 
     if self.hp <= 0 then
         self:die()
-        --self.area.room:addScore(self.value)
+        self.area.room:addScore(self.value)
     else
         --self.hit_flash = true
         --self.timer:after(0.2, function() self.hit_flash = false end)
@@ -60,7 +60,13 @@ function Rock:hit(damage)
 end
 
 function Rock:update(dt)
-    Rock.super.update(self, dt)
+    if not FROZEN then
+        Rock.super.update(self, dt)
+    else 
+        --self.x = self.x
+        --self.y = self.y
+        --print('Frozen')
+    end
 end
 
 function Rock:draw()

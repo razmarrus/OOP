@@ -5,8 +5,8 @@
 -- Time: 21:01
 -- To change this template use File | Settings | File Templates.
 --
-
-
+FROZEN = false
+HERO = 'Mage'
 default_color = {222, 222, 222}
 background_color = {16, 16, 16}
 ammo_color = {123, 200, 164}
@@ -18,9 +18,12 @@ camera = Camera()
 draft = Draft()
 timer = Timer()
 
+
 -- no buffering for stdout please
 io.stdout:setvbuf("no")
 camera.smoother = Camera.smooth.damped(5)
+skill_points = 2
+BEST_SCORE = 0
 
 FONT_SIZE = 18
 
@@ -41,6 +44,27 @@ state = require "libraries/game/state"
 
 ------------------------------------------------------------------------------
 -- FUNCTIONS
+function save()
+    local save_data = {}
+    -- Set all save data here
+    save_data.skill_points = skill_points
+    save_data.bought_node_indexes = bought_node_indexes
+    save_data.best_score = BEST_SCORE
+    bitser.dumpLoveFile('save', save_data)
+end
+
+function load()
+    if love.filesystem.exists('save') then
+        local save_data = bitser.loadLoveFile('save')
+        skill_points = save_data.skill_points
+        bought_node_indexes = save_data.bought_node_indexes 
+        BEST_SCORE = save_data.best_score 
+	-- Load all saved data here
+    else
+        first_run_ever = true
+    end
+end
+
 
 function resize(s)
     love.window.setMode(s*gw, s*gh)

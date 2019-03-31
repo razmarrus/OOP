@@ -7,8 +7,14 @@ function Mana:new(area, x, y, opts)
     self.depth = 65
     self.mana = 10
     self.w, self.h = 8, 8
+    self.m_portion = love.graphics.newImage("images/Mana_po.png")
+    if HERO == 'Mage' then
+        self.m_portion = love.graphics.newImage("images/Mana_po.png")
+    elseif HERO == 'Warrior' then
+        self.m_portion = love.graphics.newImage("images/Hp_p.png")
+    end
 
-    m_portion = love.graphics.newImage("images/Mana_po.png")
+    
 
     self.collider = self.area.world:newCircleCollider(self.x, self.y, self.w)
     self.collider:setObject(self)
@@ -39,8 +45,8 @@ end
 
 
 function Mana:draw()
-    Ma = {self.x,self.y}
-    love.graphics.draw(m_portion, Ma[1] - person:getWidth()/2 + 10, Ma[2] - m_portion:getHeight()/2)
+    local Ma = {self.x,self.y}
+    love.graphics.draw(self.m_portion, Ma[1] - person:getWidth()/2 + 10, Ma[2] - self.m_portion:getHeight()/2)
             drawn = true
 end
 
@@ -51,6 +57,9 @@ end
 
 function Mana:die()
     self.dead = true
-    self.area:addGameObject('InfoText', self.x, self.y, {text = '+MANA', color = colors.mana_color})
-
+    if HERO == 'Mage' then
+        self.area:addGameObject('InfoText', self.x, self.y, {text = '+MANA', color = colors.mana_color})
+    elseif HERO == 'Warrior' then
+        self.area:addGameObject('InfoText', self.x, self.y, {text = '+HP', color = colors.hp_color})
+    end
 end
