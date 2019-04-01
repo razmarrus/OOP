@@ -16,9 +16,14 @@ function Stage:new()
     self.area.world:addCollisionClass('EnemyProjectile', {ignores = {'EnemyProjectile', 'Projectile', 'Enemy'}})
     self.font = GAME_FONT
     
+    self.cat_sound_activated = false
+    self.cat_sound_was_activated = false
+    self.cat_sound_was_unactivated = true
+
     self.player = self.area:addGameObject('Player', gw/2, gh/2)
     self.back = self.area:addGameObject('Background', gw/2, gh/2)
     sound = love.audio.newSource("music/SOAD_Chop_Suey_8_bit.mp3")
+    
     sound:play()
     self.director = Director(self)
 
@@ -71,16 +76,37 @@ end
 function Stage:update(dt)
     self.area:update(dt)
     self.director:update(dt)
+    if self.player.cat_flag and (not self.cat_sound_activated) then
+        sound:stop()
+        sound = love.audio.newSource("music/Nyan_Cat.mp3")
+        sound:play()
+        self.cat_sound_activated = true
+        self.cat_sound_was_activated = true
+        self.cat_sound_was_unactivated = false
+    end
+
+    if (not self.player.cat_flag and self.cat_sound_was_activated) and (not self.cat_sound_was_unactivated) then      
+        self.cat_sound_was_activated = false
+        self.cat_sonnd_was_unactivated = true
+        self.cat_sound_activated = false
+
+        sound:stop()
+        sound = love.audio.newSource("music/SOAD_Chop_Suey_8_bit.mp3")
+        sound:play()
+    end
 
     if self.score_to_skill_points > 10000 then
         self.score_to_skill_points = 0
         skill_points = skill_points + 1
+        self.player.score_unchange_current = 0
     end
+
 end
 
 function Stage:destroy()
     self.area:destroy()
     self.area = nil
+    CAT = false 
     sound:stop()
     if BEST_SCORE < self.score then
         BEST_SCORE = self.score 
@@ -188,7 +214,7 @@ function Stage:draw()
 end
 
 function Stage:finish()
-
+    CAT = false 
     timer:after(1, function()
         gotoRoom('Stage')
     end)
@@ -197,4 +223,5 @@ end
 function Stage:addScore(pt)
     self.score = self.score + pt
     self.score_to_skill_points = self.score_to_skill_points + pt
+    self.player.score_unchange_current = 0
 end

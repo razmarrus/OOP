@@ -24,6 +24,11 @@ function Rock:new(area, x, y, opts)
 
     self.hit_flash = false
 
+    
+    self.love_activated = false
+    self.love_was_activated = false
+    self.love_was_unactivated = true
+
     -- stats
 
     self.hp = opts.hp or 100
@@ -60,9 +65,24 @@ function Rock:hit(damage)
 end
 
 function Rock:update(dt)
-    if not FROZEN then
+    --if not FROZEN then
         Rock.super.update(self, dt)
-    else 
+    --else 
+
+
+        
+    if CAT and (not self.love_activated) then
+        barrel = love.graphics.newImage("images/iggi.png")
+        self.love_activated = true
+        self.love_was_activated = true
+        self.love_was_unactivated = false
+    end
+
+    if (not CAT) and self.love_was_activated and (not self.love_was_unactivated) then      
+        self.love_was_activated = false
+        self.love_activated = false
+        self.love_was_unactivated = true
+        barrel = love.graphics.newImage("images/Barrel.png")
         --self.x = self.x
         --self.y = self.y
         --print('Frozen')
@@ -70,7 +90,8 @@ function Rock:update(dt)
 end
 
 function Rock:draw()
-
+    
+    if CAT then love.graphics.setColor(colors.white) end
     bar = {self.x,self.y}
     love.graphics.draw(barrel, bar[1] - barrel:getWidth()/2, bar[2] - barrel:getHeight()/2)
             drawn = true
@@ -78,6 +99,7 @@ function Rock:draw()
     if self.hit_flash then
         love.graphics.setColor(colors.default_color)
     end
+    if CAT then love.graphics.setColor(colors.white) end
 end
 
 

@@ -29,6 +29,7 @@ function Shooter:new(area, x, y, opts)
     self.v = -direction*utils.random(20, 40)
     self.collider:setLinearVelocity(self.v, 0)
     shooter_image = love.graphics.newImage("images/shooter.png")
+    --shooter_image = love.graphics.newImage("images/bus_pusheen.png")
     self.shootflag = false
     -- effects
 
@@ -48,6 +49,11 @@ function Shooter:new(area, x, y, opts)
             self.shootflag = false
         end)
     end)
+
+    
+    self.love_activated = false
+    self.love_was_activated = false
+    self.love_was_unactivated = true
 
     -- stats
 
@@ -82,6 +88,25 @@ end
 
 function Shooter:update(dt)
     Shooter.super.update(self, dt)
+
+    
+    if CAT and (not self.love_activated) then
+        --print("CALMCALM")
+        shooter_image = love.graphics.newImage("images/pusheen_attack.png")
+        self.love_activated = true
+        self.love_was_activated = true
+        self.love_was_unactivated = false
+    end
+    --if CAT then 
+    --    shooter_image = love.graphics.newImage("images/bus_pusheen.png")
+    --end
+
+    if (not CAT) and self.love_was_activated and (not self.love_was_unactivated) then      
+        self.love_was_activated = false
+        self.love_activated = false
+        self.love_was_unactivated = true
+        shooter_image = love.graphics.newImage("images/shooter.png")
+    end
 end
 
 function Shooter:draw()
@@ -90,13 +115,22 @@ function Shooter:draw()
     else
        love.graphics.setColor(self.color)
     end
+    if CAT then love.graphics.setColor(colors.white) end
     if self.shootflag then
-        shooter_image = love.graphics.newImage("images/creep_attack.png")
+        if not CAT then 
+            shooter_image = love.graphics.newImage("images/creep_attack.png")
+        else 
+            love.graphics.setColor(colors.white)
+            shooter_image = love.graphics.newImage("images/pusheen_attack.png")
+        end
         local sh_im = {self.x,self.y}
         love.graphics.draw(shooter_image, sh_im[1] - shooter_image:getWidth()/2, sh_im[2] - shooter_image:getHeight()/2)
             drawn = true
     else
-        shooter_image = love.graphics.newImage("images/shooter.png")
+        if not CAT then shooter_image = love.graphics.newImage("images/shooter.png")
+        else 
+            shooter_image = love.graphics.newImage("images/calm.png")
+        end
         local sh_im = {self.x,self.y}
         love.graphics.draw(shooter_image, sh_im[1] - shooter_image:getWidth()/2, sh_im[2] - shooter_image:getHeight()/2)
             drawn = true

@@ -10,6 +10,10 @@ function Projectile:new(area, x, y, opts)
     self.collider:setObject(self)
     self.collider:setCollisionClass('Projectile')
     self.collider:setLinearVelocity(self.v*math.cos(self.r), self.v*math.sin(self.r))
+
+    self.love_activated = false
+    self.love_was_activated = false
+    self.love_was_unactivated = true
 end
 
 
@@ -17,6 +21,22 @@ end
 function Projectile:update(dt)
     Projectile.super.update(self, dt)
     self.collider:setLinearVelocity(self.v*math.cos(self.r), self.v*math.sin(self.r))
+
+
+    if CAT and (not self.love_activated) then
+        proj = love.graphics.newImage("images/heart.png")
+        self.love_activated = true
+        self.love_was_activated = true
+        self.love_was_unactivated = false
+    end
+
+    if (not CAT) and self.love_was_activated and (not self.love_was_unactivated) then      
+        self.love_was_activated = false
+        self.love_activated = false
+        self.love_was_unactivated = true
+        proj = love.graphics.newImage("images/snowball.png")
+    end
+
 
     if self.x < 0 then self:die() end
     if self.y < 0 then self:die() end

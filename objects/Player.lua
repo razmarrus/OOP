@@ -40,6 +40,15 @@ function Player:new(area, x, y, opts)
     self.special_skill_duration = 5
     self.special_skill_time = 10
     self.special_skill_flag = false
+    
+    self.cat_duration = 5
+    self.cat_time = 0
+    self.score_unchange_required = 5
+    self.score_unchange_current = 0
+    self.cat_flag = false
+    --self.cat_du
+
+
     if HERO == 'Mage' then
         self.hero = 'Mage'
     elseif HERO == 'Warrior' then
@@ -54,17 +63,12 @@ function Player:new(area, x, y, opts)
     elseif self.hero == 'Warrior' then
         self.person = love.graphics.newImage("images/Viking.png")
     end
+    self.person_buffer = self.person
     person = self.person
-    --self.hp = self.max_hp
-    --self.hp_stat        = Stats("hp", 100)
-
 
     self.collider:setCollisionClass('Player')
 
     self.timer:every(5, function() self:tick() end)
-    
-    --input:bind('w', function() self:die() end)
-    --input:bind('a', function()   goto_room_Menu() end)
 
     if self.hero == 'Mage' then
         self.timer:every(0.24, function()
@@ -75,11 +79,11 @@ function Player:new(area, x, y, opts)
     self.timer:every(2, function()
         --self.area:addGameObject('Rock', utils.random(0, gw), utils.random(0, gh))
     end)
-
+  ]]--
     self.timer:every(3, function()
-        --self.area:addGameObject('Shooter', utils.random(0, gw), utils.random(0, gh))
+        self.area:addGameObject('Shooter', utils.random(0, gw), utils.random(0, gh))
     end)
-    ]]--
+  
     
 
 end
@@ -96,8 +100,35 @@ function Player:update(dt)
     if self.special_skill_time < self.special_skill_cooldown then
         self.special_skill_time = self.special_skill_time + dt
     elseif self.special_skill_time == self.special_skill_cooldown then
-        print("Skill awaleble")
+        print("Skill ready")
     end
+
+   if self.cat_flag == true and self.score_unchange_current > self.cat_duration then
+        self.cat_flag = false
+        self.person =  self.person_buffer 
+        person = self.person
+        self.score_unchange_current = 0
+        CAT = false
+        
+    end
+    
+    --if hero == 'M'
+    if self.score_unchange_current < self.score_unchange_required then
+        --print("HEY")
+        self.score_unchange_current =  self.score_unchange_current + dt
+        if self.score_unchange_current % 2 == 0 then
+            print("score_unchange_current "..score_unchange_current)
+        end
+    else
+        self.cat_flag = true
+        self.person = love.graphics.newImage("images/cat.png")
+        person = self.person
+        self.score_unchange_current = 0
+        print("CAT")
+        CAT = true
+    end
+
+
 
     if self.special_skill_time >= self.special_skill_duration and FROZEN == true and self.hero == 'Mage' then
         FROZEN = false
@@ -181,6 +212,7 @@ end
 
 
 function Player:draw()
+    if CAT then love.graphics.setColor(colors.white) end
     self.character = {self.x,self.y}
     love.graphics.draw(person, self.character[1] - person:getWidth()/2, self.character[2] - person:getHeight()/2)
             drawn = true
@@ -197,6 +229,8 @@ function Player:draw()
         end
         love.graphics.circle("fill", 150, 255, 10, 5) 
     end
+
+
 
 end
 

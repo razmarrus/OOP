@@ -24,6 +24,7 @@ io.stdout:setvbuf("no")
 camera.smoother = Camera.smooth.damped(5)
 skill_points = 2
 BEST_SCORE = 0
+CAT = false
 
 FONT_SIZE = 18
 
