@@ -46,7 +46,9 @@ function Projectile:update(dt)
     if self.collider:enter('Enemy') then
         local collision_data = self.collider:getEnterCollisionData('Enemy')
         local object = collision_data.collider:getObject()
-
+        if TWO then
+            self.area.room:addScoreMage(100)
+        end
         object:hit(self.damage)
         self:die()
     end

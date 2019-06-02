@@ -1,20 +1,20 @@
-Player = GameObject:extend()
+MagePlayer = GameObject:extend()
 
 local SHOOT_RATE = 0.25
 local BOOST_RATE = 2
 
 local PLAYER_SIZE = 12
 
-function Player:new(area, x, y, opts)
-    Player.super.new(self, area, x, y, opts)
+function MagePlayer:new(area, x, y, opts)
+    MagePlayer.super.new(self, area, x, y, opts)
 
     self.x, self.y = x, y
     self.w, self.h = PLAYER_SIZE, PLAYER_SIZE
     self.collider = self.area.world:newCircleCollider(self.x, self.y, self.w)
     self.collider:setObject(self)
-    HP = 80
+    --HP = 80
     self.font = GAME_FONT
-    MANA = 50
+    --MANA = 50
     self:setAttack('Neutral')
     self.r = -math.pi/2
     self.rv = 1.66*math.pi  --velocorty of rounding
@@ -46,7 +46,7 @@ function Player:new(area, x, y, opts)
     self.shield_addition = 0
     --hp_multiplier
 
-    self.hero = HERO
+    --self.hero = HERO
     self.special_skill_cooldown = 15
     self.special_skill_duration = 5
     self.special_skill_time = 10
@@ -59,12 +59,10 @@ function Player:new(area, x, y, opts)
     self.cat_flag = false
     --self.cat_du
 
+    --HERO = 'Mage'
 
-    if HERO == 'Mage' then
-        self.hero = 'Mage'
-    elseif HERO == 'Warrior' then
-        self.hero = 'Warrior'
-    end
+    self.hero = 'Mage'
+
     treeToPlayer(self)
     self:setStats()
 
@@ -87,29 +85,12 @@ function Player:new(area, x, y, opts)
         end)
     end
 
---[[
-    self.timer:every(2, function()
-        --self.area:addGameObject('Rock', utils.random(0, gw), utils.random(0, gh))
-    end)
-  
-    self.timer:every(3, function()
-        self.area:addGameObject('Shooter', utils.random(0, gw), utils.random(0, gh))
-    end)
-    ]]--
-  
-    
 
 end
 
-function GM()
-    print("GOD MOD")
-    HP = 100
-    undieble = true
-end
 
-
-function Player:update(dt)
-    Player.super.update(self, dt)
+function MagePlayer:update(dt)
+    MagePlayer.super.update(self, dt)
     if self.boost_stat < self.max_boost then
         self.boost_stat = self.boost_stat + 10*dt
         if self.boost_stat > self.max_boost then
@@ -141,40 +122,17 @@ function Player:update(dt)
         
     end
     
-    --if hero == 'M'
-    --[[
-    if self.score_unchange_current < self.score_unchange_required then
-        --print("HEY")
-        self.score_unchange_current =  self.score_unchange_current + dt
-        if self.score_unchange_current % 2 == 0 then
-            print("score_unchange_current "..score_unchange_current)
-        end
-    else
-        self.cat_flag = true
-        self.person = love.graphics.newImage("images/cat.png")
-        person = self.person
-        self.score_unchange_current = 0
-        print("CAT")
-        CAT = true
-    end
-    ]]--
 
-
-    if self.special_skill_time >= self.special_skill_duration and FROZEN == true and self.hero == 'Mage' then
-        FROZEN = false
-    elseif self.special_skill_time >= self.special_skill_duration and self.hero == 'Warrior' then
-        undieble = false
-    end
 
     -- increase boost over time
 
     self.v = math.min(self.v + self.a*dt, self.max_v)
     self.collider:setLinearVelocity(self.v*math.cos(self.r), self.v*math.sin(self.r))
     
-    --if love.keyboard.isDown('a') then self.r = self.r - self.rv*dt end
-    --if love.keyboard.isDown('d') then self.r = self.r + self.rv*dt end
-    if input:down('left') then self.r = self.r - self.rv*dt end
-    if input:down('right') then self.r = self.r + self.rv*dt end
+    if love.keyboard.isDown('a') then self.r = self.r - self.rv*dt end
+    if love.keyboard.isDown('d') then self.r = self.r + self.rv*dt end
+    --if input:down('left') then self.r = self.r - self.rv*dt end
+    --if input:down('right') then self.r = self.r + self.rv*dt end
 
     --
 --    v = self.velocity_stat:add(self.accel_stat.value*dt)
@@ -184,7 +142,7 @@ function Player:update(dt)
     if self.v >= self.max_v then
         self.v = self.max_v
     end
-    self.hp = HP
+    --self.hp = HP
     if self.x < 0 then self:die() end
     if self.y < 0 then self:die() end
     if self.x > gw then self:die() end
@@ -196,19 +154,19 @@ function Player:update(dt)
     self.boosting = false
 
     
-    if love.keyboard.isDown("up") and boost > 1 then--input:down('up') then 
+    if love.keyboard.isDown("w") and boost > 1 then--input:down('up') then 
         --print("UP")
         self.boosting = true
         self.max_v = 1.5* self.base_max_v 
     end
-    if love.keyboard.isDown("down") and boost > 1 then--input:down('down') then 
+    if love.keyboard.isDown("s") and boost > 1 then--input:down('down') then 
         --print("DOWN")
         self.boosting = true
         self.max_v = 0.5* self.base_max_v 
     end
 
 
-    if self.boosting and  self.boost_stat > 1 then
+    if self.boosting and boost > 1 then
         -- decrease boost while boosting
         self.boost_stat = self.boost_stat - 50 * dt
         self.boosting = false
@@ -235,7 +193,7 @@ function Player:update(dt)
     
     if self.collider:enter('EnemyProjectile') and self.hero == 'Warrior' then
         self.hp = self.hp - 10
-        HP = self.hp
+        --HP = self.hp
         if self.hp <= 0 then
             self.hp = 0
             self:die()
@@ -251,11 +209,6 @@ function Player:update(dt)
             if self.mana < self.max_mana and self.hero == 'Mage' then
                 self.mana = self.mana + 15
                 print("Mana "..self.mana)
-            elseif self.hp < self.max_hp and self.hero == 'Warrior' then
-                self.hp = self.hp + 20
-                HP = self.hp
-                print("Hp "..self.hp)
-                print("HP ADDED")
             end
         end
         if self.mana > self.max_mana then
@@ -263,7 +216,7 @@ function Player:update(dt)
         end
         if self.hp > self.max_hp then
                 self.hp = self.max_hp
-                HP = self.max_hp
+                --HP = self.max_hp
         end
     end
 
@@ -271,42 +224,28 @@ function Player:update(dt)
 end
 
 
-function Player:draw()
+function MagePlayer:draw()
     --if CAT then love.graphics.setColor(colors.white) end
     love.graphics.setColor(colors.white)
     self.character = {self.x,self.y}
     love.graphics.draw(person, self.character[1] - person:getWidth()/2, self.character[2] - person:getHeight()/2)
             drawn = true
-    if undieble then
-        love.graphics.circle('line', self.x, self.y, 22)
-    end
-    --love.graphics.circle('line', self.x, self.y, self.w)
-    --love.graphics.line(self.x, self.y, self.x + 2*self.w*math.cos(self.r), self.y + 2*self.w*math.sin(self.r))
-    --if self.hero == 'Warrior' then
-        if self.special_skill_time < self.special_skill_cooldown  then
-            love.graphics.setColor(115, 112, 112)
-        else
-            love.graphics.setColor(255, 215, 0)
-        end
-        love.graphics.circle("fill", 150, 255, 10, 5) 
-    --end
-
 
 end
 
-function Player:destroy()
-    Player.super.destroy(self)
+function MagePlayer:destroy()
+    MagePlayer.super.destroy(self)
 end
 
 
-function Player:specialSkill()
+function MagePlayer:specialSkill()
 
     if self.hero == 'Mage' and self.special_skill_time >= self.special_skill_cooldown then --self.hero == 'Mage' and
-        FROZEN = true
+       -- FROZEN = true
         --print()
         self.special_skill_flag = true
         self.special_skill_time = 0
-        print('something special')
+        --print('something special')
     elseif self.hero == 'Warrior' and self.special_skill_time >= self.special_skill_cooldown then 
         self.special_skill_flag = true
         self.special_skill_time = 0
@@ -315,10 +254,10 @@ function Player:specialSkill()
     end
 end
 
-function Player:setStats()
+function MagePlayer:setStats()
     self.max_hp = (self.max_hp + self.flat_hp)*self.hp_multiplier
     self.hp = self.max_hp - 20
-    HP = self.hp
+    --HP = self.hp
 
     self.max_mana = (self.max_mana + self.flat_mana)*self.mana_multiplier
     self.mana = self.max_mana
@@ -328,7 +267,7 @@ function Player:setStats()
 end
 
 
-function Player:shoot()
+function MagePlayer:shoot()
     local d = 1.2*self.w
     local d = 1.2*self.w
 
@@ -413,7 +352,8 @@ function Player:shoot()
 end
 
 
-function Player:die()
+function MagePlayer:die()
+    self.hp = 0
     self.dead = true 
     --flash(4)
 
@@ -422,38 +362,20 @@ function Player:die()
     	self.area:addGameObject('ExplodeParticle', self.x, self.y) 
     end
     --state.current_room = Stage()
-    state.current_room:finish()
+    --state.current_room:finish()
 end
 
-function Player:tick()
+function MagePlayer:tick()
     self.area:addGameObject('TickEffect', self.x, self.y, {parent = self})
 end
 
 
-function Player:hit(damage)
+function MagePlayer:hit(damage)
     local damage = damage or 40
 
-    if not undieble and self.hero == 'Mage' then
-        self.hp = self.hp - damage
-        HP = self.hp
-    elseif self.hero == 'Warrior' and damage == 10 then
-        self.hp = self.hp - damage
-        HP = self.hp
-    elseif self.hero == 'Warrior' and undieble then
-        local collision_data = self.collider:getEnterCollisionData('Enemy')
-        local object = collision_data.collider:getObject()
-        object:hit(self.damage)
-    elseif self.hero == 'Warrior' then
-        self.hp = self.hp - 3
-        local collision_data = self.collider:getEnterCollisionData('Enemy')
-        local object = collision_data.collider:getObject()
-        --if object.collider != 'EnemyProjectile' then
-        object:hit(self.damage)
-        --end
-    end
-    HP = self.hp
 
-    if self.invincible then return end
+    self.hp = self.hp - damage
+
     if self.hp > 0 then
         print("P: hit " .. damage)
         print("current hp " .. self.hp)
@@ -489,21 +411,18 @@ function Player:hit(damage)
 end
 
 
-function Player:addHP(amount)
+function MagePlayer:addHP(amount)
     self.hp:add(amount, function()
         self:die()
     end)
 end
 
-function Player:addMana(amount)
+function MagePlayer:addMana(amount)
     --sif self.mana > 0
     self.mana = self.mana + amount
-    --self.mana:add(amount, function()
-    --    self:die()
-    --end)
 end
 
-function Player:setAttack(attack)
+function MagePlayer:setAttack(attack)
     print("P: attack " .. attack)
 
     withState("attacks", function(attacks)

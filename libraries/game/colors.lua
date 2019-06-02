@@ -16,6 +16,11 @@ colors.cyan = {0, 255, 255, 255 }
 colors.magenta = {255, 0, 255, 255 }
 colors.yellow = {255, 255, 0, 255 }
 colors.black = {0, 0, 0, 255 }
+colors.darkorange = {255, 140, 0}
+colors.orange = {255, 165, 0}
+colors.purple = {128, 0, 12}
+colors.mpurple = {147, 122, 129}
+colors.magenta  = {255, 0, 25}
 
 colors.default_color = {222, 222, 222}
 colors.background_color = {16, 16, 16}

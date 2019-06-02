@@ -1,21 +1,21 @@
-Player = GameObject:extend()
+WarrPlayer = GameObject:extend()
 
 local SHOOT_RATE = 0.25
 local BOOST_RATE = 2
 
 local PLAYER_SIZE = 12
 
-function Player:new(area, x, y, opts)
-    Player.super.new(self, area, x, y, opts)
+function WarrPlayer:new(area, x, y, opts)
+    WarrPlayer.super.new(self, area, x, y, opts)
 
     self.x, self.y = x, y
     self.w, self.h = PLAYER_SIZE, PLAYER_SIZE
     self.collider = self.area.world:newCircleCollider(self.x, self.y, self.w)
     self.collider:setObject(self)
-    HP = 80
+    --HP = 80
     self.font = GAME_FONT
-    MANA = 50
-    self:setAttack('Neutral')
+    --MANA = 50
+
     self.r = -math.pi/2
     self.rv = 1.66*math.pi  --velocorty of rounding
     self.v = 2
@@ -46,7 +46,7 @@ function Player:new(area, x, y, opts)
     self.shield_addition = 0
     --hp_multiplier
 
-    self.hero = HERO
+    --self.hero = HERO
     self.special_skill_cooldown = 15
     self.special_skill_duration = 5
     self.special_skill_time = 10
@@ -59,57 +59,27 @@ function Player:new(area, x, y, opts)
     self.cat_flag = false
     --self.cat_du
 
+    --HERO = 'Mage'
 
-    if HERO == 'Mage' then
-        self.hero = 'Mage'
-    elseif HERO == 'Warrior' then
-        self.hero = 'Warrior'
-    end
+    self.hero = 'Warrior'
+
     treeToPlayer(self)
     self:setStats()
 
+    self.person = love.graphics.newImage("images/Viking.png")
 
-    if self.hero == 'Mage' then
-        self.person = love.graphics.newImage("images/Wizzard_pix.png")
-    elseif self.hero == 'Warrior' then
-        self.person = love.graphics.newImage("images/Viking.png")
-    end
     self.person_buffer = self.person
-    person = self.person
+    personwarr = self.person
 
     self.collider:setCollisionClass('Player')
 
     self.timer:every(5, function() self:tick() end)
 
-    if self.hero == 'Mage' then
-        self.timer:every(0.24, function()
-            self:shoot()
-        end)
-    end
-
---[[
-    self.timer:every(2, function()
-        --self.area:addGameObject('Rock', utils.random(0, gw), utils.random(0, gh))
-    end)
-  
-    self.timer:every(3, function()
-        self.area:addGameObject('Shooter', utils.random(0, gw), utils.random(0, gh))
-    end)
-    ]]--
-  
-    
-
-end
-
-function GM()
-    print("GOD MOD")
-    HP = 100
-    undieble = true
 end
 
 
-function Player:update(dt)
-    Player.super.update(self, dt)
+function WarrPlayer:update(dt)
+    WarrPlayer.super.update(self, dt)
     if self.boost_stat < self.max_boost then
         self.boost_stat = self.boost_stat + 10*dt
         if self.boost_stat > self.max_boost then
@@ -132,15 +102,6 @@ function Player:update(dt)
         print("Skill ready")
     end
 
-   if self.cat_flag == true and self.score_unchange_current > self.cat_duration then
-        self.cat_flag = false
-        self.person =  self.person_buffer 
-        person = self.person
-        self.score_unchange_current = 0
-        CAT = false
-        
-    end
-    
     --if hero == 'M'
     --[[
     if self.score_unchange_current < self.score_unchange_required then
@@ -160,9 +121,7 @@ function Player:update(dt)
     ]]--
 
 
-    if self.special_skill_time >= self.special_skill_duration and FROZEN == true and self.hero == 'Mage' then
-        FROZEN = false
-    elseif self.special_skill_time >= self.special_skill_duration and self.hero == 'Warrior' then
+    if self.special_skill_time >= self.special_skill_duration and self.hero == 'Warrior' then
         undieble = false
     end
 
@@ -184,7 +143,7 @@ function Player:update(dt)
     if self.v >= self.max_v then
         self.v = self.max_v
     end
-    self.hp = HP
+    --self.hp = HP
     if self.x < 0 then self:die() end
     if self.y < 0 then self:die() end
     if self.x > gw then self:die() end
@@ -208,7 +167,7 @@ function Player:update(dt)
     end
 
 
-    if self.boosting and  self.boost_stat > 1 then
+    if self.boosting and boost > 1 then
         -- decrease boost while boosting
         self.boost_stat = self.boost_stat - 50 * dt
         self.boosting = false
@@ -227,6 +186,7 @@ function Player:update(dt)
     if self.collider:enter('Enemy') then
         local collision_data = self.collider:getEnterCollisionData('Enemy')
         local object = collision_data.collider:getObject()
+        self.area.room:addScoreWarr(100)
         --self:addHP(-damage)
         --object:hit(self.damage)
         self:hit(30)
@@ -235,7 +195,7 @@ function Player:update(dt)
     
     if self.collider:enter('EnemyProjectile') and self.hero == 'Warrior' then
         self.hp = self.hp - 10
-        HP = self.hp
+        --HP = self.hp
         if self.hp <= 0 then
             self.hp = 0
             self:die()
@@ -253,7 +213,7 @@ function Player:update(dt)
                 print("Mana "..self.mana)
             elseif self.hp < self.max_hp and self.hero == 'Warrior' then
                 self.hp = self.hp + 20
-                HP = self.hp
+                --HP = self.hp
                 print("Hp "..self.hp)
                 print("HP ADDED")
             end
@@ -263,7 +223,7 @@ function Player:update(dt)
         end
         if self.hp > self.max_hp then
                 self.hp = self.max_hp
-                HP = self.max_hp
+                --HP = self.max_hp
         end
     end
 
@@ -271,11 +231,11 @@ function Player:update(dt)
 end
 
 
-function Player:draw()
+function WarrPlayer:draw()
     --if CAT then love.graphics.setColor(colors.white) end
     love.graphics.setColor(colors.white)
     self.character = {self.x,self.y}
-    love.graphics.draw(person, self.character[1] - person:getWidth()/2, self.character[2] - person:getHeight()/2)
+    love.graphics.draw(personwarr, self.character[1] - personwarr:getWidth()/2, self.character[2] - personwarr:getHeight()/2)
             drawn = true
     if undieble then
         love.graphics.circle('line', self.x, self.y, 22)
@@ -288,26 +248,20 @@ function Player:draw()
         else
             love.graphics.setColor(255, 215, 0)
         end
-        love.graphics.circle("fill", 150, 255, 10, 5) 
+        love.graphics.circle("fill", 450, 255, 10, 5) 
     --end
 
 
 end
 
-function Player:destroy()
-    Player.super.destroy(self)
+function WarrPlayer:destroy()
+    WarrPlayer.super.destroy(self)
 end
 
 
-function Player:specialSkill()
+function WarrPlayer:specialSkill()
 
-    if self.hero == 'Mage' and self.special_skill_time >= self.special_skill_cooldown then --self.hero == 'Mage' and
-        FROZEN = true
-        --print()
-        self.special_skill_flag = true
-        self.special_skill_time = 0
-        print('something special')
-    elseif self.hero == 'Warrior' and self.special_skill_time >= self.special_skill_cooldown then 
+    if self.special_skill_time >= self.special_skill_cooldown then 
         self.special_skill_flag = true
         self.special_skill_time = 0
         undieble = true
@@ -315,10 +269,10 @@ function Player:specialSkill()
     end
 end
 
-function Player:setStats()
+function WarrPlayer:setStats()
     self.max_hp = (self.max_hp + self.flat_hp)*self.hp_multiplier
     self.hp = self.max_hp - 20
-    HP = self.hp
+    --HP = self.hp
 
     self.max_mana = (self.max_mana + self.flat_mana)*self.mana_multiplier
     self.mana = self.max_mana
@@ -328,92 +282,9 @@ function Player:setStats()
 end
 
 
-function Player:shoot()
-    local d = 1.2*self.w
-    local d = 1.2*self.w
 
-    self.area:addGameObject('ShootEffect',
-        self.x + d*math.cos(self.r),
-        self.y + d*math.sin(self.r),
-        {player = self, d = d})
-
-    if self.attack == 'Neutral' then
-        self.area:addGameObject('Projectile',
-            self.x + 1.5*d*math.cos(self.r), self.y + 1.5*d*math.sin(self.r), {r = self.r})
-    end
-
-    if self.mana > 0 then
-
-        if self.attack == 'Double' then
-            local dr = math.pi/12
-            for _, r in ipairs({self.r + dr, self.r - dr}) do
-                self.area:addGameObject('Projectile',
-                    self.x + 1.5*d*math.cos(r), self.y + 1.5*d*math.sin(r), {r = r, attack=self.attack})
-            end
-        end
-
-        if self.attack == 'Triple' then
-            local dr = math.pi/12
-            for _, r in ipairs({self.r + dr, self.r, self.r - dr}) do
-                self.area:addGameObject('Projectile',
-                    self.x + 1.5*d*math.cos(r), self.y + 1.5*d*math.sin(r), {r = r, attack=self.attack})
-            end
-        end
-
-        if self.attack == 'Rapid' then
-            self.area:addGameObject('Projectile',
-                self.x + 1.5*d*math.cos(self.r), self.y + 1.5*d*math.sin(self.r),
-                {r = self.r, attack = self.attack})
-        end
-
-        if self.attack == 'Spread' then
-            local dr = utils.random(-math.pi/12, math.pi/12)
-            self.area:addGameObject('Projectile',
-                self.x + 1.5*d*math.cos(self.r + dr),
-                self.y + 1.5*d*math.sin(self.r + dr),
-                {r = self.r + dr, attack=self.attack})
-        end
-
-        if self.attack == 'Back' then
-            local dr = math.pi
-            for _, r in ipairs({self.r + dr, self.r}) do
-                self.area:addGameObject('Projectile',
-                    self.x + 1.5*d*math.cos(r), self.y + 1.5*d*math.sin(r), {r = r, attack=self.attack})
-            end
-        end
-
-        if self.attack == 'Side' then
-            local dr = math.pi/2
-            for _, r in ipairs({self.r + dr, self.r, self.r - dr}) do
-                self.area:addGameObject('Projectile',
-                    self.x + 1.5*d*math.cos(r), self.y + 1.5*d*math.sin(r), {r = r, attack=self.attack})
-            end
-        end
-    else
-        self:setAttack('Neutral')
-        self.area:addGameObject('Projectile',
-        self.x + 1.5*d*math.cos(self.r), self.y + 1.5*d*math.sin(self.r), {r = self.r})
-        
-    end
-    if self.mana < 0 then
-        self.mana = 0
-    end
-
-
-    withAttack(self.attack, function(attack)
-        self:addMana(-attack.mana)
-    end)
---[[
-    self.area:addGameObject('ShootEffect', self.x + d*math.cos(self.r), 
-    self.y + d*math.sin(self.r), {player = self, d = d})
-
-    self.area:addGameObject('Projectile', self.x + 1.5*d*math.cos(self.r), 
-    self.y + 1.5*d*math.sin(self.r), {r = self.r})
-    ]]--
-end
-
-
-function Player:die()
+function WarrPlayer:die()
+    self.hp = 0
     self.dead = true 
     --flash(4)
 
@@ -422,23 +293,20 @@ function Player:die()
     	self.area:addGameObject('ExplodeParticle', self.x, self.y) 
     end
     --state.current_room = Stage()
-    state.current_room:finish()
+    --state.current_room:finish()
 end
 
-function Player:tick()
+function WarrPlayer:tick()
     self.area:addGameObject('TickEffect', self.x, self.y, {parent = self})
 end
 
 
-function Player:hit(damage)
+function WarrPlayer:hit(damage)
     local damage = damage or 40
 
-    if not undieble and self.hero == 'Mage' then
+    if self.hero == 'Warrior' and damage == 10 then
         self.hp = self.hp - damage
-        HP = self.hp
-    elseif self.hero == 'Warrior' and damage == 10 then
-        self.hp = self.hp - damage
-        HP = self.hp
+        --HP = self.hp
     elseif self.hero == 'Warrior' and undieble then
         local collision_data = self.collider:getEnterCollisionData('Enemy')
         local object = collision_data.collider:getObject()
@@ -451,7 +319,7 @@ function Player:hit(damage)
         object:hit(self.damage)
         --end
     end
-    HP = self.hp
+    --HP = self.hp
 
     if self.invincible then return end
     if self.hp > 0 then
@@ -489,27 +357,16 @@ function Player:hit(damage)
 end
 
 
-function Player:addHP(amount)
+function WarrPlayer:addHP(amount)
     self.hp:add(amount, function()
         self:die()
     end)
 end
 
-function Player:addMana(amount)
+function WarrPlayer:addMana(amount)
     --sif self.mana > 0
     self.mana = self.mana + amount
     --self.mana:add(amount, function()
     --    self:die()
     --end)
-end
-
-function Player:setAttack(attack)
-    print("P: attack " .. attack)
-
-    withState("attacks", function(attacks)
-        local cooldown = attacks[attack].cooldown
-        self.shoot_timer = CooldownTimer(cooldown)
-        self.attack = attack
-
-    end)
 end

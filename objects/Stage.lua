@@ -2,6 +2,7 @@ Stage = Object:extend()
 
 function Stage:new()
     --self.depth = 30
+    TWO = false
     undieble = false
     self.score = 0
     self.score_to_skill_points = 0
@@ -21,7 +22,7 @@ function Stage:new()
     self.cat_sound_was_unactivated = true
 
     self.player = self.area:addGameObject('Player', gw/2, gh/2)
-    self.back = self.area:addGameObject('Background', gw/2, gh/2)
+    --self.back = self.area:addGameObject('Background', gw/2, gh/2)
     sound = love.audio.newSource("music/SOAD_Chop_Suey_8_bit.mp3")
     
     sound:play()
@@ -60,14 +61,11 @@ function Stage:new()
             self.player:setAttack("Spread")
         elseif key =='s' then
             self.player:specialSkill()
-        end
-        --[[
         elseif key =='6' then
             self.player:setAttack("Back")
         elseif key =='7' then
             self.player:setAttack("Side")
         end
-        ]]--
     end
 
 
@@ -122,6 +120,7 @@ function Stage:draw()
 
     love.graphics.setFont(self.font)
 
+
     local r, g, b = unpack(colors.hp_color)
     local hp, max_hp = self.player.hp, self.player.max_hp
     
@@ -135,10 +134,19 @@ function Stage:draw()
     math.floor(self.font:getWidth('HP')/0.8), math.floor(self.font:getHeight()/2))
     --love.graphics.setCanvas()
     
-    love.graphics.setCanvas(self.main_canvas)
+    --love.graphics.setCanvas(self.main_canvas)
     love.graphics.print(hp .. '/' .. max_hp, gw/2 -29 , gh - 25, 0, 1, 1, -- max_hp, gw/2 + 180 , gh + 220, 0, 2, 2,
     math.floor(self.font:getWidth(hp .. '/' .. max_hp)/2),
     math.floor(self.font:getHeight()/2))
+    love.graphics.setCanvas()
+
+    local r, g, b = unpack(colors.darkorange)
+    local boost, max_boost = self.player.boost_stat, self.player.max_boost
+    love.graphics.setColor(r, g, b)
+    love.graphics.setCanvas(self.main_canvas)
+    love.graphics.rectangle('fill', gw/2 + 200 , gh/2 - 20, 12, 90*boost/max_boost)--(boost/max_boost))
+    love.graphics.setColor(r - 32, g - 32, b - 32)
+    love.graphics.rectangle('line', gw/2 + 200, gh/2 - 20, 12, 90)
     love.graphics.setCanvas()
 
     --if self.player.hero == 'Mage' then
@@ -157,7 +165,7 @@ function Stage:draw()
         math.floor(self.font:getWidth('MANA')/2), math.floor(self.font:getHeight()/2))
         love.graphics.setCanvas()
 
-        
+
         love.graphics.setCanvas(self.main_canvas)
         love.graphics.print(mana .. '/' .. max_mana, gw/2 + 35 , gh - 25, 0, 1, 1, --gw/2 + 315 , gh + 220, 0, 2, 2,
         math.floor(self.font:getWidth(mana .. '/' .. max_mana)/2),
@@ -165,6 +173,13 @@ function Stage:draw()
         love.graphics.setCanvas() 
     --end
     --love.graphics.setCanvas()
+
+    --BOOST
+    
+        --
+
+
+    love.graphics.setColor(colors.mana_color)
     love.graphics.setCanvas(self.main_canvas)
     love.graphics.print('LEVEL', gw - 60 , 35, 0, 1, 1,
     math.floor(self.font:getWidth('LEVEL')), math.floor(self.font:getHeight()))

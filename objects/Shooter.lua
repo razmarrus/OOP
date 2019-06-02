@@ -15,8 +15,11 @@ function Shooter:new(area, x, y, opts)
     self.w, self.h = 12, 6
     self.x = gw/2 + direction*(gw/2 + 48)
     self.y = utils.random(self.h, gh - self.h)
+    self.x_prev = 0
+    self.y_prev = 0
 
-   self.color = opts.color or colors.hp_color
+   self.color = colors.white--opts.color or colors.hp_color
+   love.graphics.setColor(colors.white)
     self.collider = self.area.world:newCircleCollider(self.x, self.y, self.w)
     --self.area.world:newPolygonCollider(
     --    {self.w, 0, -self.w/2, self.h, -self.w, 0, -self.w/2, -self.h})
@@ -79,7 +82,6 @@ function Shooter:hit(damage)
 
     if self.hp <= 0 then
         self:die()
-        self.area.room:addScore(self.value)
     else
         self.hit_flash = true
         self.timer:after(0.2, function() self.hit_flash = false end)
@@ -87,7 +89,16 @@ function Shooter:hit(damage)
 end
 
 function Shooter:update(dt)
+    self.x_prev = self.x
+    self.y_prev = self.y
     Shooter.super.update(self, dt)
+
+    if FROZEN then
+        self.x = self.x_prev
+        self.y = self.y_prev
+        
+        self.collider:setPosition(self.x, self.y)
+    end
 
     
     if CAT and (not self.love_activated) then
@@ -111,13 +122,17 @@ end
 
 function Shooter:draw()
     if self.hit_flash then
-        love.graphics.setColor(colors.default_color)
+        --love.graphics.setColor(colors.default_color)
+        love.graphics.setColor(colors.white)
     else
-       love.graphics.setColor(self.color)
+        love.graphics.setColor(colors.white)
+       --love.graphics.setColor(self.color)
     end
     if CAT then love.graphics.setColor(colors.white) end
     if self.shootflag then
+        love.graphics.setColor(colors.white)
         if not CAT then 
+            love.graphics.setColor(colors.white)
             shooter_image = love.graphics.newImage("images/creep_attack.png")
         else 
             love.graphics.setColor(colors.white)
@@ -127,8 +142,10 @@ function Shooter:draw()
         love.graphics.draw(shooter_image, sh_im[1] - shooter_image:getWidth()/2, sh_im[2] - shooter_image:getHeight()/2)
             drawn = true
     else
+        love.graphics.setColor(colors.white)
         if not CAT then shooter_image = love.graphics.newImage("images/shooter.png")
         else 
+            love.graphics.setColor(colors.white)
             shooter_image = love.graphics.newImage("images/calm.png")
         end
         local sh_im = {self.x,self.y}

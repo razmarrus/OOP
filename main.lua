@@ -61,6 +61,7 @@ function love.load()
     love.graphics.setLineStyle("rough")
     resize(2)
     --gotoRoom("Stage")
+    --gotoRoom("MultiStage")
     --gotoRoom("SkillTree")
     gotoRoom("Menu")
 end

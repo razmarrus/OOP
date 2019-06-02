@@ -7,6 +7,7 @@
 --
 FROZEN = false
 HERO = 'Mage'
+HP = 80
 default_color = {222, 222, 222}
 background_color = {16, 16, 16}
 ammo_color = {123, 200, 164}
@@ -25,6 +26,7 @@ camera.smoother = Camera.smooth.damped(5)
 skill_points = 2
 BEST_SCORE = 0
 CAT = false
+TWO = false
 
 FONT_SIZE = 18
 

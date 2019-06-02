@@ -20,11 +20,13 @@ function Rock:new(area, x, y, opts)
     self.collider:setLinearVelocity(self.v, 0)
     self.collider:applyAngularImpulse(utils.random(-100, 100))
     self.depth = 65
+
+    self.x_prev = 0
+    self.y_prev = 0
     -- effects
 
     self.hit_flash = false
 
-    
     self.love_activated = false
     self.love_was_activated = false
     self.love_was_unactivated = true
@@ -58,21 +60,23 @@ function Rock:hit(damage)
     if self.hp <= 0 then
         self:die()
         self.area.room:addScore(self.value)
-    else
+    end
+
         --self.hit_flash = true
         --self.timer:after(0.2, function() self.hit_flash = false end)
-    end
+    
 end
 
 function Rock:update(dt)
     --if not FROZEN then
+        self.x_prev = self.x
+        self.y_prev = self.y
+
         Rock.super.update(self, dt)
     --else 
-
-
         
     if CAT and (not self.love_activated) then
-        barrel = love.graphics.newImage("images/iggi.png")
+        barrel = love.graphics.newImage("images/jojoiggi.png")
         self.love_activated = true
         self.love_was_activated = true
         self.love_was_unactivated = false
@@ -87,6 +91,14 @@ function Rock:update(dt)
         --self.y = self.y
         --print('Frozen')
     end
+
+    if FROZEN then
+        self.x = self.x_prev
+        self.y = self.y_prev
+        
+        self.collider:setPosition(self.x, self.y)
+    end
+
 end
 
 function Rock:draw()

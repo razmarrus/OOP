@@ -1,7 +1,6 @@
-
-Menu = Object:extend()
-
-function Menu:new()
+Dialog = Object:extend()
+--[[
+function Dialog:new()
     --self.area = Area(self)
     --Menu.super.new(self)
     self.timer = Timer()
@@ -14,10 +13,7 @@ function Menu:new()
     --HERO = 'Mage'
     --DIFFICULTY = 1
     log_screen_image = love.graphics.newImage("images/dio_background.png")
-    button_play = Button(gw - 110 , gh -120, 200, 35, "Play")
-    button_two = Button(gw+110 , gh -120, 200, 35, "Play in two")
-    button_SkillTree = Button(gw , gh -60, 200, 35, "Skill Tree")
-    button_Exit = Button(gw , gh, 200, 35, "Exit")
+    button_play = Button(gw , gh 220, 200, 35, "Next")
     _G.events:hook("onBtnClick", on_click_play)
 end
 
@@ -26,35 +22,31 @@ function on_click_play(button)
         gotoRoom("Stage")
     elseif button == button_SkillTree then
         gotoRoom("SkillTree")
-    elseif button == button_two then
-        gotoRoom("MultiStage")
     elseif  button == button_Exit then
         love.event.quit()
     end
 end
 
 
-function Menu:draw()
+function Dialog:draw()
 
     love.graphics.draw(log_screen_image, gw/2 - log_screen_image:getWidth()/4,
     gh/2 - log_screen_image:getHeight()/4) 
         drawn = true
         
     button_play:draw()
-    button_two:draw()
     button_SkillTree:draw()
     button_Exit:draw()
 end
 
-function Menu:update(dt)
-    button_two:update(dt)
+function Dialog:update(dt)
     button_play:update(dt)
     button_SkillTree:update(dt)
     button_Exit:update(dt)
     --self.area:update(dt)
 end
 
-function Menu:addLine(delay, text)
+function Dialog:addLine(delay, text)
     --self.timer:after(delay, function() 
     	table.insert(self.lines, {x = gw - 10, y = self.line_y, 
         text = love.graphics.newText(self.font, text)}) 
@@ -62,7 +54,8 @@ function Menu:addLine(delay, text)
    -- end)
 end
 
-function Menu:destroy()
+function Dialog:destroy()
     _G.events:unhook("onBtnClick", on_click_play)
     sound:stop()
 end
+]]--
