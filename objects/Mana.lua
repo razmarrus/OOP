@@ -10,7 +10,7 @@ function Mana:new(area, x, y, opts)
     self.m_portion = love.graphics.newImage("images/Mana_po.png")
     if HERO == 'Mage' then
         self.m_portion = love.graphics.newImage("images/Mana_po.png")
-    elseif HERO == 'Warrior' then
+    elseif HERO == 'Warrior' or HERO == 'Jojo' then
         self.m_portion = love.graphics.newImage("images/Hp_p.png")
     end
 
@@ -59,7 +59,7 @@ function Mana:die()
     self.dead = true
     if HERO == 'Mage' then
         self.area:addGameObject('InfoText', self.x, self.y, {text = '+MANA', color = colors.mana_color})
-    elseif HERO == 'Warrior' then
+    elseif HERO == 'Warrior' or HERO == 'Jojo' then
         self.area:addGameObject('InfoText', self.x, self.y, {text = '+HP', color = colors.hp_color})
     end
 end

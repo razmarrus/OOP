@@ -34,6 +34,7 @@ function Shooter:new(area, x, y, opts)
     shooter_image = love.graphics.newImage("images/shooter.png")
     --shooter_image = love.graphics.newImage("images/bus_pusheen.png")
     self.shootflag = false
+    self.damage = 15
     -- effects
 
     self.hit_flash = false
@@ -60,7 +61,7 @@ function Shooter:new(area, x, y, opts)
 
     -- stats
 
-    self.hp = opts.hp or 100
+    self.hp = opts.hp or 10
     self.value = 150
 end
 

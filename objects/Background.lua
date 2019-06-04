@@ -6,7 +6,12 @@ function Background:new(area, x, y, opts)
     self.x, self.y = x, y
     self.font = GAME_FONT
      -- фон для нашей сцены
-    scene = love.graphics.newImage("images/grass.png")
+    if DIO then
+        scene = love.graphics.newImage("images/d_back.png")
+    else
+        scene = love.graphics.newImage("images/grass.png")
+    end
+    
     self.love_activated = false
     self.love_was_activated = false
     self.love_was_unactivated = true

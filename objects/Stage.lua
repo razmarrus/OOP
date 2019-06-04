@@ -4,6 +4,7 @@ function Stage:new()
     --self.depth = 30
     TWO = false
     undieble = false
+    DIO = false
     self.score = 0
     self.score_to_skill_points = 0
 
@@ -22,7 +23,7 @@ function Stage:new()
     self.cat_sound_was_unactivated = true
 
     self.player = self.area:addGameObject('Player', gw/2, gh/2)
-    --self.back = self.area:addGameObject('Background', gw/2, gh/2)
+    self.back = self.area:addGameObject('Background', gw/2, gh/2)
     sound = love.audio.newSource("music/SOAD_Chop_Suey_8_bit.mp3")
     
     sound:play()
@@ -43,7 +44,7 @@ function Stage:new()
             gotoRoom("Menu")
         elseif key == 'x' or key == "Tab" then
             print("Change")
-            if HERO == 'Mage' then
+            if HERO == 'Mage' or HERO == 'Jojo' then
                 HERO = 'Warrior'
             elseif HERO == 'Warrior' then
                 HERO = 'Mage'
@@ -65,6 +66,9 @@ function Stage:new()
             self.player:setAttack("Back")
         elseif key =='7' then
             self.player:setAttack("Side")
+        elseif key =='j' then
+            HERO = 'Jojo'
+            gotoRoom("Stage")
         end
     end
 
@@ -150,10 +154,11 @@ function Stage:draw()
     love.graphics.setCanvas()
 
     --if self.player.hero == 'Mage' then
+    if self.player.hero == 'Mage'  then
         love.graphics.setCanvas(self.main_canvas)
         local r, g, b = unpack(colors.mana_color)
         local mana, max_mana = self.player.mana, self.player.max_mana
-        local difficulty = self.director.difficulty
+
         love.graphics.setColor(r, g, b)
         love.graphics.rectangle('fill', gw/2+10, gh - 16, 48*(mana/max_mana), 4)
         love.graphics.setColor(r - 32, g - 32, b - 32)
@@ -171,6 +176,7 @@ function Stage:draw()
         math.floor(self.font:getWidth(mana .. '/' .. max_mana)/2),
         math.floor(self.font:getHeight()/2))
         love.graphics.setCanvas() 
+    end
     --end
     --love.graphics.setCanvas()
 
@@ -185,7 +191,7 @@ function Stage:draw()
     math.floor(self.font:getWidth('LEVEL')), math.floor(self.font:getHeight()))
     love.graphics.setCanvas()
 
-    
+    local difficulty = self.director.difficulty
     love.graphics.setCanvas(self.main_canvas)
     love.graphics.print( difficulty, gw - 25 , 35, 0, 1, 1,
     math.floor(self.font:getWidth(difficulty)),

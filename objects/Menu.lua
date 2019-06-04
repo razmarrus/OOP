@@ -14,20 +14,27 @@ function Menu:new()
     --HERO = 'Mage'
     --DIFFICULTY = 1
     log_screen_image = love.graphics.newImage("images/dio_background.png")
+    button_dio =  Button(gw , gh - 200, 200, 35, "To dio")
     button_play = Button(gw - 110 , gh -120, 200, 35, "Play")
-    button_two = Button(gw+110 , gh -120, 200, 35, "Play in two")
-    button_SkillTree = Button(gw , gh -60, 200, 35, "Skill Tree")
+    button_two =  Button(gw + 110 , gh -120, 200, 35, "Play in two")
+    button_SkillTree = Button(gw , gh - 60, 200, 35, "Skill Tree")
     button_Exit = Button(gw , gh, 200, 35, "Exit")
     _G.events:hook("onBtnClick", on_click_play)
 end
 
 function on_click_play(button)
     if button == button_play then
-        gotoRoom("Stage")
+        if first_run then
+            gotoRoom("DialogStage")
+        else
+            gotoRoom("Stage")
+        end
     elseif button == button_SkillTree then
         gotoRoom("SkillTree")
     elseif button == button_two then
         gotoRoom("MultiStage")
+    elseif button == button_dio then
+        gotoRoom("DioStage")
     elseif  button == button_Exit then
         love.event.quit()
     end
@@ -44,6 +51,7 @@ function Menu:draw()
     button_two:draw()
     button_SkillTree:draw()
     button_Exit:draw()
+    button_dio:draw()
 end
 
 function Menu:update(dt)
@@ -51,6 +59,7 @@ function Menu:update(dt)
     button_play:update(dt)
     button_SkillTree:update(dt)
     button_Exit:update(dt)
+    button_dio:update(dt)
     --self.area:update(dt)
 end
 

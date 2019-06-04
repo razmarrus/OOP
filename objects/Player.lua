@@ -1,5 +1,5 @@
 Player = GameObject:extend()
-
+--162
 local SHOOT_RATE = 0.25
 local BOOST_RATE = 2
 
@@ -23,6 +23,10 @@ function Player:new(area, x, y, opts)
     self.max_v = self.base_max_v
     self.a = 100
     self.depth = 75
+    --self.damage = 35
+
+    self.prev_x = 0
+    self.prev_y = 0
 
     self.boosting = false
     self.boost_timer = CooldownTimer(BOOST_RATE)
@@ -47,7 +51,7 @@ function Player:new(area, x, y, opts)
     --hp_multiplier
 
     self.hero = HERO
-    self.special_skill_cooldown = 15
+    self.special_skill_cooldown = 0 --15
     self.special_skill_duration = 5
     self.special_skill_time = 10
     self.special_skill_flag = false
@@ -59,12 +63,15 @@ function Player:new(area, x, y, opts)
     self.cat_flag = false
     --self.cat_du
 
-
+    self.hero = HERO
+    --[[
     if HERO == 'Mage' then
         self.hero = 'Mage'
     elseif HERO == 'Warrior' then
         self.hero = 'Warrior'
+    elseif HERO == 'Jojo'
     end
+    ]]--
     treeToPlayer(self)
     self:setStats()
 
@@ -73,6 +80,8 @@ function Player:new(area, x, y, opts)
         self.person = love.graphics.newImage("images/Wizzard_pix.png")
     elseif self.hero == 'Warrior' then
         self.person = love.graphics.newImage("images/Viking.png")
+    elseif self.hero == 'Jojo' then
+        self.person = love.graphics.newImage("images/Jojo.png")
     end
     self.person_buffer = self.person
     person = self.person
@@ -87,6 +96,8 @@ function Player:new(area, x, y, opts)
         end)
     end
 
+
+
 --[[
     self.timer:every(2, function()
         --self.area:addGameObject('Rock', utils.random(0, gw), utils.random(0, gh))
@@ -97,7 +108,6 @@ function Player:new(area, x, y, opts)
     end)
     ]]--
   
-    
 
 end
 
@@ -109,6 +119,8 @@ end
 
 
 function Player:update(dt)
+    self.prev_x = self.x
+    self.prev_y = self.y
     Player.super.update(self, dt)
     if self.boost_stat < self.max_boost then
         self.boost_stat = self.boost_stat + 10*dt
@@ -129,7 +141,7 @@ function Player:update(dt)
     if self.special_skill_time < self.special_skill_cooldown then
         self.special_skill_time = self.special_skill_time + dt
     elseif self.special_skill_time == self.special_skill_cooldown then
-        print("Skill ready")
+        --print("Skill ready")
     end
 
    if self.cat_flag == true and self.score_unchange_current > self.cat_duration then
@@ -139,6 +151,11 @@ function Player:update(dt)
         self.score_unchange_current = 0
         CAT = false
         
+    end
+
+    if DIO then
+        player_x = self.x
+        player_y = self.y
     end
     
     --if hero == 'M'
@@ -160,7 +177,7 @@ function Player:update(dt)
     ]]--
 
 
-    if self.special_skill_time >= self.special_skill_duration and FROZEN == true and self.hero == 'Mage' then
+    if self.special_skill_time >= self.special_skill_duration and FROZEN == true and self.hero == 'Jojo' then
         FROZEN = false
     elseif self.special_skill_time >= self.special_skill_duration and self.hero == 'Warrior' then
         undieble = false
@@ -234,14 +251,15 @@ function Player:update(dt)
     end
     
     if self.collider:enter('EnemyProjectile') and self.hero == 'Warrior' then
-        self.hp = self.hp - 10
-        HP = self.hp
+        --self.hp = self.hp - 10
+        --HP = self.hp
         if self.hp <= 0 then
             self.hp = 0
             self:die()
         end
         print("warrior hitted")
     end
+    
 
     if self.collider:enter('Collectable')  then
         local collision_data = self.collider:getEnterCollisionData('Collectable')
@@ -251,7 +269,7 @@ function Player:update(dt)
             if self.mana < self.max_mana and self.hero == 'Mage' then
                 self.mana = self.mana + 15
                 print("Mana "..self.mana)
-            elseif self.hp < self.max_hp and self.hero == 'Warrior' then
+            elseif self.hp < self.max_hp and (self.hero == 'Warrior' or self.hero == 'Jojo') then
                 self.hp = self.hp + 20
                 HP = self.hp
                 print("Hp "..self.hp)
@@ -265,6 +283,19 @@ function Player:update(dt)
                 self.hp = self.max_hp
                 HP = self.max_hp
         end
+    end
+
+    if DIO and FROZEN then 
+        self.x = self.prev_x
+        self.y = self.prev_y
+        self.collider:setPosition(self.x, self.y)
+    end
+
+    
+    if RR then
+        self.x = gw/2 - love.math.random(1, 8)
+        self.y = gh/2 - love.math.random(1, 8)
+        self.collider:setPosition(self.x, self.y)
     end
 
 
@@ -301,7 +332,7 @@ end
 
 function Player:specialSkill()
 
-    if self.hero == 'Mage' and self.special_skill_time >= self.special_skill_cooldown then --self.hero == 'Mage' and
+    if self.hero == 'Jojo' and self.special_skill_time >= self.special_skill_cooldown then --self.hero == 'Mage' and
         FROZEN = true
         --print()
         self.special_skill_flag = true
@@ -417,7 +448,7 @@ function Player:die()
     self.dead = true 
     --flash(4)
 
-    --camera:shake(6, 60, 0.4)
+    camera:shake(16, 60, 1)
     for i = 1, love.math.random(8, 12) do 
     	self.area:addGameObject('ExplodeParticle', self.x, self.y) 
     end
@@ -431,19 +462,31 @@ end
 
 
 function Player:hit(damage)
-    local damage = damage or 40
+    local damage = damage or 20
 
     if not undieble and self.hero == 'Mage' then
         self.hp = self.hp - damage
         HP = self.hp
-    elseif self.hero == 'Warrior' and damage == 10 then
+    elseif (self.hero == 'Warrior' or self.hero == 'Jojo') and undieble and damage == 10 then
+        print('get proj while undieble')
+    elseif (self.hero == 'Warrior' or self.hero == 'Jojo') and damage == 10 then
         self.hp = self.hp - damage
         HP = self.hp
-    elseif self.hero == 'Warrior' and undieble then
+        print('2')
+    elseif (self.hero == 'Warrior' or self.hero == 'Jojo') and undieble then
+        print('5')
         local collision_data = self.collider:getEnterCollisionData('Enemy')
         local object = collision_data.collider:getObject()
         object:hit(self.damage)
-    elseif self.hero == 'Warrior' then
+    elseif DIO then 
+        print('3')
+        self.hp = self.hp - damage
+        HP = self.hp
+        local collision_data = self.collider:getEnterCollisionData('Enemy')
+        local object = collision_data.collider:getObject()
+        object:hit(self.damage)
+    elseif self.hero == 'Warrior' or self.hero == 'Jojo' then
+        print('4')
         self.hp = self.hp - 3
         local collision_data = self.collider:getEnterCollisionData('Enemy')
         local object = collision_data.collider:getObject()

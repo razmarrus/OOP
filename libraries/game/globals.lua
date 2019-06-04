@@ -27,6 +27,13 @@ skill_points = 2
 BEST_SCORE = 0
 CAT = false
 TWO = false
+DIO = false
+player_x = 0
+player_y = 0
+dio_killed = false
+DIO = false
+first_run = true
+RR = false
 
 FONT_SIZE = 18
 
@@ -49,10 +56,11 @@ state = require "libraries/game/state"
 -- FUNCTIONS
 function save()
     local save_data = {}
-    -- Set all save data here
     save_data.skill_points = skill_points
     save_data.bought_node_indexes = bought_node_indexes
     save_data.best_score = BEST_SCORE
+    save_data.first_run = first_run
+    save_data.dio_killed = dio_killed
     bitser.dumpLoveFile('save', save_data)
 end
 

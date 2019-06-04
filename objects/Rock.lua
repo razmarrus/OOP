@@ -10,7 +10,11 @@ function Rock:new(area, x, y, opts)
 
     self.color = opts.color or colors.hp_color
     self.points = utils.createIrregularPolyPoints(self.s/2, 8)
-    barrel = love.graphics.newImage("images/Barrel.png")
+    if DIO then 
+        barrel = love.graphics.newImage("images/zombie.png")
+    else
+        barrel = love.graphics.newImage("images/Barrel.png")
+    end
     self.collider = self.area.world:newPolygonCollider(self.points)
     self.collider:setPosition(self.x, self.y)
     self.collider:setObject(self)
@@ -20,7 +24,7 @@ function Rock:new(area, x, y, opts)
     self.collider:setLinearVelocity(self.v, 0)
     self.collider:applyAngularImpulse(utils.random(-100, 100))
     self.depth = 65
-
+    self.damage = 15
     self.x_prev = 0
     self.y_prev = 0
     -- effects
@@ -33,7 +37,7 @@ function Rock:new(area, x, y, opts)
 
     -- stats
 
-    self.hp = opts.hp or 100
+    self.hp = opts.hp or 10
     self.value = 100
 end
 

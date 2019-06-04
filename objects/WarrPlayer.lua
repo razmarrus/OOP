@@ -79,12 +79,22 @@ end
 
 
 function WarrPlayer:update(dt)
+    if DIO then
+        player_x = self.x
+        player_y = self.y
+    end
+
     WarrPlayer.super.update(self, dt)
     if self.boost_stat < self.max_boost then
         self.boost_stat = self.boost_stat + 10*dt
         if self.boost_stat > self.max_boost then
             self.max_boost = self.boost_stat  
         end
+    end
+
+    if DIO then
+        player_x = self.x
+        player_y = self.y
     end
 
     local boost = self.boost_stat

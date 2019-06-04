@@ -15,7 +15,7 @@ Button      = require 'libraries/button/Button'
 Event       = require 'libraries/button/Events'
 bitser      = require 'libraries/bitser/bitser'
 require 'libraries/utf8/utf8'
-require 'libraries/lovedebug/lovedebug'
+--require 'libraries/lovedebug/lovedebug'
 
 ------------------------------------------------------------------------------
 -- GAME LIBRARIES
@@ -42,6 +42,7 @@ function love.load()
     load()
     input:bind("left", "left")
     input:bind("right", "right")
+    input:bind('c', function() camera:shake(4, 60, 1) end)
    -- input:bind("up", "up")
    -- input:bind("down", "down")
 
@@ -63,7 +64,9 @@ function love.load()
     --gotoRoom("Stage")
     --gotoRoom("MultiStage")
     --gotoRoom("SkillTree")
-    gotoRoom("Menu")
+    --gotoRoom("Menu")
+    gotoRoom("DioStage")
+    --gotoRoom("DialogStage")
 end
 
 
