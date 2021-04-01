@@ -49,7 +49,7 @@ function WarrPlayer:new(area, x, y, opts)
     --self.hero = HERO
     self.special_skill_cooldown = 15
     self.special_skill_duration = 5
-    self.special_skill_time = 10
+    self.special_skill_time = 0
     self.special_skill_flag = false
     
     self.cat_duration = 5
@@ -108,8 +108,7 @@ function WarrPlayer:update(dt)
 
     if self.special_skill_time < self.special_skill_cooldown then
         self.special_skill_time = self.special_skill_time + dt
-    elseif self.special_skill_time == self.special_skill_cooldown then
-        print("Skill ready")
+    --elseif self.special_skill_time >= self.special_skill_cooldown then
     end
 
     --if hero == 'M'

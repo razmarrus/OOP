@@ -14,7 +14,7 @@ function Menu:new()
     --HERO = 'Mage'
     --DIFFICULTY = 1
     log_screen_image = love.graphics.newImage("images/dio_background.png")
-    button_dio =  Button(gw , gh - 200, 200, 35, "To dio")
+    button_dio =  Button(gw , gh - 200, 200, 35, "Finall boss")
     button_play = Button(gw - 110 , gh -120, 200, 35, "Play")
     button_two =  Button(gw + 110 , gh -120, 200, 35, "Play in two")
     button_SkillTree = Button(gw , gh - 60, 200, 35, "Skill Tree")

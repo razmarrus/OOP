@@ -51,14 +51,14 @@ function Player:new(area, x, y, opts)
     --hp_multiplier
 
     self.hero = HERO
-    self.special_skill_cooldown = 0 --15
+    self.special_skill_cooldown = 15 --15
     self.special_skill_duration = 5
     self.special_skill_time = 10
     self.special_skill_flag = false
     
     self.cat_duration = 5
     self.cat_time = 0
-    self.score_unchange_required = 5
+    self.score_unchange_required = 10
     self.score_unchange_current = 0
     self.cat_flag = false
     --self.cat_du
@@ -140,7 +140,7 @@ function Player:update(dt)
 
     if self.special_skill_time < self.special_skill_cooldown then
         self.special_skill_time = self.special_skill_time + dt
-    elseif self.special_skill_time == self.special_skill_cooldown then
+    --elseif self.special_skill_time == self.special_skill_cooldown then
         --print("Skill ready")
     end
 
@@ -159,7 +159,10 @@ function Player:update(dt)
     end
     
     --if hero == 'M'
-    --[[
+
+    --/NYAN CAT MUSIC PLAYING/
+    --if you will be peaceful for 15 sec, u will become a cat
+    ----[[
     if self.score_unchange_current < self.score_unchange_required then
         --print("HEY")
         self.score_unchange_current =  self.score_unchange_current + dt
@@ -174,7 +177,7 @@ function Player:update(dt)
         print("CAT")
         CAT = true
     end
-    ]]--
+    --]]--
 
 
     if self.special_skill_time >= self.special_skill_duration and FROZEN == true and self.hero == 'Jojo' then
@@ -334,7 +337,15 @@ function Player:specialSkill()
 
     if self.hero == 'Jojo' and self.special_skill_time >= self.special_skill_cooldown then --self.hero == 'Mage' and
         FROZEN = true
-        --print()
+        
+        number = love.math.random()
+        if number < 0.7 then
+            sound = love.audio.newSource("music/time_stop.mp3") 
+        else
+            sound = love.audio.newSource("music/Yare_yare_daze.mp3")
+        end
+        sound:play()
+
         self.special_skill_flag = true
         self.special_skill_time = 0
         print('something special')

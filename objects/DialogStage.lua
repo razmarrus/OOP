@@ -68,7 +68,7 @@ function DialogStage:draw()
             love.graphics.print('So, Dio was killed, but his servants are stil alive\n\nNew hero appeared in city - he said\nhis name is Jojo.\nTry him in main stage', gw/2-50, gh/2-100, 0, 1, 1, -- gw/2 + 400, gh + 240, 0, 2, 2,
             math.floor(self.font:getWidth('So, Dio was killed, but his servants are stil alive\n\nNew hero appeared in city - he said\nhis name is Jojo.\nTry him in main stage')/2), math.floor(self.font:getHeight()/2))
        else
-            love.graphics.print('I greet you, my drear hero.\nMy name is Jognar Jobrock. \nFew mounth ago vampire named Dio has appeared here.\n We need to kill enought dios mimions to sum him.\n Hepl me with it!\n\n Press <- and -> right to move\npress X to shange hero', gw/2-50, gh/2-100, 0, 1, 1, -- gw/2 + 400, gh + 240, 0, 2, 2,
+            love.graphics.print('I greet you, my drear hero.\nMy name is Jognar Jobrock. \nFew mounth ago vampire named Dio has appeared here.\n We must kill enought Dio\'s minions to summon him.\n Hepl me with it!\n\n Press <- and -> right to move\npress X to change hero.\nPress S while being warrior to use your shield.\nPress 1 (or 2, 3 etc.) to change projectile style\n while controlling mage', gw/2-50, gh/2-100, 0, 1, 1, -- gw/2 + 400, gh + 240, 0, 2, 2,
             math.floor(self.font:getWidth('I greet you, my drear hero.\nMy name is Jognar Jobrock. \nFew mounth ago vampire named Dio has appeared here.\n We need to kill enought dios mimions to sum him.\n Hepl me with it!\n\n Press <- and -> right to move\npress X to shange hero')/2), math.floor(self.font:getHeight()/2))
        end
        love.graphics.setCanvas()

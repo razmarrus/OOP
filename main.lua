@@ -64,8 +64,8 @@ function love.load()
     --gotoRoom("Stage")
     --gotoRoom("MultiStage")
     --gotoRoom("SkillTree")
-    --gotoRoom("Menu")
-    gotoRoom("DioStage")
+    gotoRoom("Menu")
+    --gotoRoom("DioStage")
     --gotoRoom("DialogStage")
 end
 
